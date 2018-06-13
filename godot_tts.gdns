@@ -4,6 +4,6 @@
 
 [resource]
 
-resource_name = "godot_tts"
-class_name = "godot_tts"
+resource_name = "TTS"
+class_name = "TTS"
 library = ExtResource( 1 )
