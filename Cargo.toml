@@ -1,0 +1,16 @@
+[package]
+name = "godot-tts"
+version = "0.1.0"
+authors = ["Nolan Darilek <nolan@thewordnerd.info>"]
+
+[lib]
+crate-type = ["cdylib"]
+
+[dependencies]
+gdnative = {git = "https://github.com/GodotNativeTools/godot-rust"}
+
+[target.'cfg(unix)'.dependencies]
+speech-dispatcher = "0.2"
+
+[target.'cfg(windows)'.dependencies]
+tolk = "0.1"
