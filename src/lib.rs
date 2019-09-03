@@ -1,49 +1,57 @@
-#[macro_use]
-extern crate gdnative as godot;
-
-#[cfg(unix)]
-extern crate speech_dispatcher;
-#[cfg(windows)]
-extern crate tolk;
+use gdnative::*;
 
 #[cfg(unix)]
 use speech_dispatcher::{Connection, Mode, Priority};
 #[cfg(windows)]
 use tolk::Tolk;
 
-godot_class! {
-    class TTS: godot::Object {
-        fields {
-            #[cfg(unix)]
-            connection: Connection,
-            #[cfg(windows)]
-            tolk: Tolk,
-        }
+#[derive(gdnative::NativeClass)]
+#[inherit(gdnative::Node)]
+struct TTS(
+    #[cfg(unix)]
+    Connection,
+    #[cfg(windows)]
+    Tolk,
+);
 
-        setup(_builder) {
+#[methods]
+impl TTS {
+    fn _init(_owner: gdnative::Node) -> Self {
+        #[cfg(unix)]
+        {
+            let connection = Connection::open("godot", "godot", "godot", Mode::Single);
+            Self(connection)
         }
+        #[cfg(windows)]
+        Self(Tolk::new())
+    }
 
-        constructor(header) {
-            TTS {
-                header,
-                #[cfg(unix)]
-                connection: Connection::open("godot", "godot", "godot", Mode::Single),
-                #[cfg(windows)]
-                tolk: Tolk::new(),
+    #[export]
+    fn speak(&mut self, _owner: Node, message: GodotString, interrupt: bool) {
+        let message = message.to_string();
+        println!("{}: {}", message, interrupt);
+        #[cfg(unix)]
+        {
+            if interrupt {
+                self.0.cancel();
+            }
+            if message != "" {
+                self.0.say(Priority::Important, message);
             }
         }
+    }
 
-        export fn speak(&mut self) {
-            #[cfg(unix)]
-            {
-                self.connection.say(Priority::Important, "Hello, world.".to_string());
-            }
+    #[export]
+    fn stop(&mut self, _owner: Node) {
+        #[cfg(unix)]
+        {
+            self.0.cancel();
         }
     }
 }
 
-fn init(handle: godot::init::InitHandle) {
-    TTS::register_class(handle);
+fn init(handle: gdnative::init::InitHandle) {
+    handle.add_class::<TTS>();
 }
 
 godot_gdnative_init!();
