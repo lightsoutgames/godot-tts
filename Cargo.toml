@@ -8,7 +8,7 @@ edition = "2018"
 crate-type = ["cdylib"]
 
 [dependencies]
-gdnative = { path = "../godot-rust/gdnative" }
+gdnative = { git = "https://github.com/ndarilek/godot-rust/" }
 
 [target.'cfg(unix)'.dependencies]
 speech-dispatcher = "0.3"
