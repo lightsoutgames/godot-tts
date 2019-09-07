@@ -1,6 +1,6 @@
 [entry]
 
-X11.64="res://target/debug/libgodot_tts.so"
+X11.64="res://addons/godot-tts/target/debug/libgodot_tts.so"
 
 [dependencies]
 
