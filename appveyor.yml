@@ -40,9 +40,11 @@ environment:
   # Stable 64-bit MSVC
     - channel: stable
       target: x86_64-pc-windows-msvc
+      platform: x64
   # Stable 32-bit MSVC
     - channel: stable
       target: i686-pc-windows-msvc
+      platform: x86
   # Beta 64-bit MSVC
   #  - channel: beta
   #    target: x86_64-pc-windows-msvc
