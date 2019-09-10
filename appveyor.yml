@@ -93,6 +93,22 @@ environment:
 # If you only care about stable channel build failures, uncomment the following line:
 #    #- channel: beta
 
+# Visual Studio developer environment for x86/x64
+# https://www.appveyor.com/docs/lang/cpp/#visual-studio
+for:
+-
+  matrix:
+    only:
+      - platform: x86
+  init:
+    - call "C:\Program Files (x86)\Microsoft Visual Studio\2017\Community\VC\Auxiliary\Build\vcvars32.bat"
+-
+  matrix:
+    only:
+      - platform: x64
+  init:
+    - call "C:\Program Files (x86)\Microsoft Visual Studio\2017\Community\VC\Auxiliary\Build\vcvars64.bat"
+
 ## Install Script ##
 
 # This is the most important part of the Appveyor configuration. This installs the version of Rust
