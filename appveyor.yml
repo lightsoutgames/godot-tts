@@ -119,3 +119,11 @@ build: false
 # environment variable.
 test_script:
   - cargo build %cargoflags%
+
+before_deploy:
+  - cargo build --release
+  - mkdir -p staging\godot-tts\target\release
+  - copy target\release\*.dll staging\godot-tts\target\release
+  - cd staging
+  - 7z a ../%PROJECT_NAME%.zip *
+  - appveyor PushArtifact ../%PROJECT_NAME%.zip
