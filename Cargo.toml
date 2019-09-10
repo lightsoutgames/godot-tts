@@ -9,9 +9,4 @@ crate-type = ["cdylib"]
 
 [dependencies]
 gdnative = { git = "https://github.com/ndarilek/godot-rust/" }
-
-[target.'cfg(unix)'.dependencies]
-speech-dispatcher = "0.3"
-
-[target.'cfg(windows)'.dependencies]
-tolk = "0.1"
+tts = { path = "../../TTS-RS" }
