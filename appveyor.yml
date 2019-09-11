@@ -137,7 +137,7 @@ build: false
 # environment variable.
 test_script:
   - set CRATE_CC_NO_DEFAULTS=1
-  - cargo build %cargoflags%
+  - cargo build -vvv %cargoflags%
 
 before_deploy:
   - cargo build --release
