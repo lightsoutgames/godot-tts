@@ -7,6 +7,7 @@ install:
   - cmd: rustup-init -y --default-toolchain stable --default-host x86_64-pc-windows-msvc
   - sh: curl https://sh.rustup.rs -sSf | sh -s -- -y --default-toolchain stable --default-host x86_64-unknown-linux-gnu
   - cmd: set PATH=%PATH%;%USERPROFILE%\.cargo\bin
+  - sh: source $HOME/.cargo/env
   - rustc -vV
   - cargo -vV
 
