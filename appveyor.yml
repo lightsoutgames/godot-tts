@@ -1,9 +1,12 @@
-image: Visual Studio 2017
+image:
+- Visual Studio 2017
+- ubuntu
 
 install:
-  - appveyor DownloadFile https://win.rustup.rs/ -FileName rustup-init.exe
-  - rustup-init -y --default-toolchain stable --default-host x86_64-pc-windows-msvc
-  - set PATH=%PATH%;%USERPROFILE%\.cargo\bin
+  - cmd: appveyor DownloadFile https://win.rustup.rs/ -FileName rustup-init.exe
+  - cmd: rustup-init -y --default-toolchain stable --default-host x86_64-pc-windows-msvc
+  - sh: curl https://sh.rustup.rs -sSf | sh -s -- -y --default-toolchain stable --default-host x86_64-unknown-linux-gnu
+  - cmd: set PATH=%PATH%;%USERPROFILE%\.cargo\bin
   - rustc -vV
   - cargo -vV
 
@@ -14,8 +17,8 @@ test_script:
 
 before_deploy:
   - cargo build --release
-  - mkdir -p staging\godot-tts\target\release
-  - copy target\release\*.dll staging\godot-tts\target\release
-  - cd staging
-  - 7z a ../%PROJECT_NAME%.zip *
-  - appveyor PushArtifact ../%PROJECT_NAME%.zip
+  - cmd: mkdir -p staging\godot-tts\target\release
+  - cmd: copy target\release\*.dll staging\godot-tts\target\release
+  - cmd: cd staging
+  - cmd: 7z a ../%PROJECT_NAME%.zip *
+  - cmd: appveyor PushArtifact ../%PROJECT_NAME%.zip
