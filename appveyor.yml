@@ -6,8 +6,8 @@ install:
   - cmd: appveyor DownloadFile https://win.rustup.rs/ -FileName rustup-init.exe
   - cmd: rustup-init -y --default-toolchain stable --default-host x86_64-pc-windows-msvc
   - sh: curl https://sh.rustup.rs -sSf | sh -s -- -y --default-toolchain stable --default-host x86_64-unknown-linux-gnu
-  - sh: apt-get update
-  - sh: apt-get install -y libspeechd-dev
+  - sh: sudo apt-get update
+  - sh: sudo apt-get install -y libspeechd-dev
   - cmd: set PATH=%PATH%;%USERPROFILE%\.cargo\bin
   - sh: source $HOME/.cargo/env
   - rustc -vV
