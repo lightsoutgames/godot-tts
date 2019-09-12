@@ -16,12 +16,9 @@ install:
 build: false
 
 test_script:
-  - cargo build
-
-before_deploy:
   - cargo build --release
   - cmd: mkdir -p staging\godot-tts\target\release
   - cmd: copy target\release\*.dll staging\godot-tts\target\release
   - cmd: cd staging
-  - cmd: 7z a ../%PROJECT_NAME%.zip *
-  - cmd: appveyor PushArtifact ../%PROJECT_NAME%.zip
+  - cmd: 7z a ../%PROJECT_NAME%-windows.zip *
+  - cmd: appveyor PushArtifact ../%PROJECT_NAME%-windows.zip
