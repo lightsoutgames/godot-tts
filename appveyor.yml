@@ -19,6 +19,13 @@ test_script:
   - cargo build --release
   - cmd: mkdir -p staging\godot-tts\target\release
   - cmd: copy target\release\*.dll staging\godot-tts\target\release
-  - cmd: cd staging
-  - cmd: 7z a ../windows.zip *
-  - cmd: appveyor PushArtifact ../windows.zip
+  # - cmd: cd staging
+  # - cmd: 7z a ../windows.zip *
+  - sh: cp godot-tts.gdn* staging/godot-tts
+  - sh: cp target/release/libgodot_tts.so target/godot-tts/target/release
+  - sh: cd target
+  - sh: zip -r9 godot-tts.zip godot-tts/
+  - sh: appveyor PushArtifact godot-tts.zip
+
+cache:
+  - staging
