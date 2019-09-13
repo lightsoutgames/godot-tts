@@ -17,7 +17,7 @@ build: false
 
 test_script:
   - cargo build --release
-  - cmd: mkdir -p staging\godot-tts\target\release
+  # - cmd: mkdir -p staging\godot-tts\target\release
   - cmd: copy target\release\*.dll staging\godot-tts\target\release
   # - cmd: cd staging
   # - cmd: 7z a ../windows.zip *
