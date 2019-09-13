@@ -28,4 +28,5 @@ test_script:
   - sh: appveyor PushArtifact godot-tts.zip
 
 cache:
+  - target
   - staging
