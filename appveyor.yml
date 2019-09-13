@@ -23,7 +23,7 @@ test_script:
   # - cmd: 7z a ../windows.zip *
   - sh: cp godot-tts.gdns staging/godot-tts
   - sh: cp godot-tts.gdnlib.release staging/godot-tts/godot-tts.gdnlib
-  - sh: cp target/release/libgodot_tts.so target/godot-tts/target/release
+  - sh: cp target/release/*.so target/godot-tts/target/release
   - sh: cd target
   - sh: zip -r9 godot-tts.zip godot-tts/
   - sh: appveyor PushArtifact godot-tts.zip
