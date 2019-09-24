@@ -1,10 +1,8 @@
-extends Object
+extends Node
 
 const TTS = preload("godot-tts.gdns")
-var tts
 
-func _init():
-    tts = TTS.new()
+var tts = TTS.new()
 
 func speak(text, interrupt := true):
     tts.speak(text, interrupt)
