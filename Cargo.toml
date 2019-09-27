@@ -8,5 +8,5 @@ edition = "2018"
 crate-type = ["cdylib"]
 
 [dependencies]
-gdnative = { git = "https://github.com/ndarilek/godot-rust/" }
+gdnative = { git = "https://github.com/GodotNativeTools/godot-rust/" }
 tts = "0.2"

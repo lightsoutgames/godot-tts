@@ -17,17 +17,14 @@ build: false
 
 test_script:
   - cargo build --release
-  # - cmd: mkdir -p staging\godot-tts\target\release
-  - cmd: copy target\release\*.dll staging\godot-tts\target\release
-  # - cmd: cd staging
-  # - cmd: 7z a ../windows.zip *
-  - sh: cp godot-tts.gdns staging/godot-tts
-  - sh: cp godot-tts.gdnlib.release staging/godot-tts/godot-tts.gdnlib
-  - sh: cp target/release/*.so target/godot-tts/target/release
-  - sh: cd target
+  - cmd: mkdir -p godot-tts\target\release
+  - cmd: copy target\release\*.dll godot-tts\target\release
+  - cmd: 7z a godot-tts-windows.zip godot-tts
+  - sh: cp godot-tts.gdns godot-tts
+  - sh: cp godot-tts.gdnlib.release godot-tts/godot-tts.gdnlib
+  - sh: cp target/release/*.so godot-tts/target/release
   - sh: zip -r9 godot-tts.zip godot-tts/
   - sh: appveyor PushArtifact godot-tts.zip
 
 cache:
   - target
-  - staging

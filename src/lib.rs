@@ -1,10 +1,42 @@
 use gdnative::*;
+use gdnative::init::*;
 
 use tts::{TTS as Tts};
 
-#[derive(gdnative::NativeClass)]
-#[inherit(gdnative::Node)]
 struct TTS(Tts);
+
+impl NativeClass for TTS {
+    type Base = Node;
+    type UserData = user_data::MutexData<TTS>;
+
+    fn class_name() -> &'static str {
+        "TTS"
+    }
+
+    fn init(owner: Self::Base) -> Self {
+        Self::_init(owner)
+    }
+
+    fn register_properties(builder: &ClassBuilder<Self>) {
+        builder.add_property(Property {
+            name: "rate",
+            default: 128,
+            hint: PropertyHint::Range {
+                range: 0.0..255.0,
+                step: 1.,
+                slider: true,
+            },
+            getter: |this: &TTS| {
+                let rate = this.0.get_rate().unwrap();
+                rate
+            },
+            setter: |this: &mut TTS, v: u8| {
+                this.0.set_rate(v).unwrap();
+            },
+            usage: PropertyUsage::DEFAULT,
+        });
+    }
+}
 
 #[methods]
 impl TTS {
