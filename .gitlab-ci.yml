@@ -1,7 +1,7 @@
 image: rust
 
 stages:
-  - test
+  - build
   - publish
 
 before_script:
@@ -9,14 +9,14 @@ before_script:
   - apt-get install -y libclang-3.9-dev libspeechd-dev
   - export CPATH=/usr/lib/llvm-3.9/lib/clang/3.9.1/include/
 
-test linux:
-  stage: test
+build linux:
+  stage: build
   script:
-  - cargo test
+  - cargo build --release
 
 publish:
   stage: publish
   script:
-  - echo Publishing.
+  - cp godot-tts.gdnlib.release godot-tts.gdnlib
   only:
   - tags
