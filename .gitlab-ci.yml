@@ -23,7 +23,7 @@ publish:
   - mkdir -p target/release
   - cp linux/release/*.so target/release
   artifacts:
-    name: $CI_JOB_NAME
+    name: godot-tts
     paths:
     - target
     - TTS.gd
