@@ -1,22 +1,33 @@
-image: rust
-
 stages:
   - build
   - publish
 
-before_script:
+build linux:
+  stage: build
+  image: rust
+  script:
   - apt-get update
   - apt-get install -y libclang-3.9-dev libspeechd-dev
   - export CPATH=/usr/lib/llvm-3.9/lib/clang/3.9.1/include/
-
-build linux:
-  stage: build
-  script:
   - cargo build --release
+  - mv target linux
+  artifacts:
+    paths:
+    - linux
+    expire_in: 1 day
 
 publish:
   stage: publish
   script:
   - cp godot-tts.gdnlib.release godot-tts.gdnlib
-  only:
-  - tags
+  - mkdir -p target/release
+  - cp linux/target/release/*.so target/release
+  artifacts:
+    name: $CI_JOB_NAME
+    paths:
+    - target
+    - TTS.gd
+    - godot-tts.gdnlib
+    - godot-tts.gdns
+    - LICENSE
+    expire_in: 1 day
