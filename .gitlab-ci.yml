@@ -21,7 +21,7 @@ publish:
   script:
   - cp godot-tts.gdnlib.release godot-tts.gdnlib
   - mkdir -p target/release
-  - ls
+  - ls linux/
   - cp linux/target/release/*.so target/release
   artifacts:
     name: $CI_JOB_NAME
