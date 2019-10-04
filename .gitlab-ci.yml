@@ -19,15 +19,14 @@ build linux:
 publish:
   stage: publish
   script:
-  - cp godot-tts.gdnlib.release godot-tts.gdnlib
-  - mkdir -p target/release
-  - cp linux/release/*.so target/release
+  - mkdir godot-tts
+  - cp godot-tts.gdnlib.release godot-tts/godot-tts.gdnlib
+  - mkdir -p godot-tts/target/release
+  - cp linux/release/*.so godot-tts/target/release
+  - cp LICENSE godot-tts
+  - cp TTS.gd godot-tts.g* godot-tts
   artifacts:
     name: godot-tts
     paths:
-    - target
-    - TTS.gd
-    - godot-tts.gdnlib
-    - godot-tts.gdns
-    - LICENSE
+    - godot-tts
     expire_in: 1 day
