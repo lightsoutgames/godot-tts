@@ -1,5 +1,6 @@
 stages:
   - build
+  - package
   - publish
 
 build linux:
@@ -16,8 +17,8 @@ build linux:
     - linux
     expire_in: 1 day
 
-publish:
-  stage: publish
+package:
+  stage: package
   script:
   - mkdir godot-tts
   - cp godot-tts.gdnlib.release godot-tts/godot-tts.gdnlib
@@ -30,3 +31,14 @@ publish:
     paths:
     - godot-tts
     expire_in: 1 day
+
+publish:
+  stage: publish
+  script:
+  - echo Publishing...
+  artifacts:
+    name: godot-tts
+    paths:
+    - godot-tts
+  only:
+  - tags
