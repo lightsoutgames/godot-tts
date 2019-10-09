@@ -31,7 +31,10 @@ impl NativeClass for TTS {
                 let rate = this.0.get_rate().unwrap();
                 rate / u8::MAX * 100
             },
-            setter: |this: &mut TTS, v: u8| {
+            setter: |this: &mut TTS, mut v: u8| {
+                if v > 100 {
+                    v = 100;
+                }
                 let v = v / 100 * u8::MAX;
                 this.0.set_rate(v as u8).unwrap();
             },
