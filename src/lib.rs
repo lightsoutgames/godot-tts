@@ -1,7 +1,8 @@
+use std::u8;
+
 use gdnative::*;
 use gdnative::init::*;
-
-use tts::{TTS as Tts};
+use tts::{Features, TTS as Tts};
 
 struct TTS(Tts);
 
@@ -20,18 +21,19 @@ impl NativeClass for TTS {
     fn register_properties(builder: &ClassBuilder<Self>) {
         builder.add_property(Property {
             name: "rate",
-            default: 128,
+            default: 50,
             hint: PropertyHint::Range {
-                range: 0.0..255.0,
+                range: 0.0..100.0,
                 step: 1.,
                 slider: true,
             },
             getter: |this: &TTS| {
                 let rate = this.0.get_rate().unwrap();
-                rate
+                rate / u8::MAX * 100
             },
             setter: |this: &mut TTS, v: u8| {
-                this.0.set_rate(v).unwrap();
+                let v = v / 100 * u8::MAX;
+                this.0.set_rate(v as u8).unwrap();
             },
             usage: PropertyUsage::DEFAULT,
         });
@@ -55,6 +57,14 @@ impl TTS {
     #[export]
     fn stop(&mut self, _owner: Node) {
         self.0.stop().unwrap();
+    }
+
+    #[export]
+    fn is_rate_supported(&mut self, _owner: Node) -> bool {
+        let Features {
+            rate: rate_feature, ..
+        } = self.0.supported_features();
+        rate_feature
     }
 }
 
