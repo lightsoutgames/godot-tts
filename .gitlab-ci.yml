@@ -26,6 +26,8 @@ package:
   - cp linux/release/*.so godot-tts/target/release
   - cp LICENSE godot-tts
   - cp TTS.gd godot-tts.g* godot-tts
+  - cp godot-tts.gdnlib.release godot-tts/godot-tts.gdnlib
+  - rm godot-tts/*.release
   artifacts:
     name: godot-tts
     paths:
