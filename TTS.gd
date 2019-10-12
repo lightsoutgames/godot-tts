@@ -3,24 +3,41 @@ extends Node
 
 const TTS = preload("godot-tts.gdns")
 
-var tts = TTS.new()
+var tts = null
+
+func _ready():
+    # Only initialize TTS if it's available or if we're in the editor.
+    if TTS.can_instance() or Engine.editor_hint:
+        print("Attempting to load TTS.")
+        tts = TTS.new()
+    else:
+        print("TTS not available!")
 
 func set_rate(rate):
-    tts.rate = rate
+    if tts != null:
+        tts.rate = rate
 
 func get_rate():
-    return tts.rate
+    if tts != null:
+        return tts.rate
+    else:
+        return 0
 
 var rate setget set_rate, get_rate
 
 func speak(text, interrupt := true):
-    tts.speak(text, interrupt)
+    if tts != null:
+        tts.speak(text, interrupt)
 
 func stop():
-    tts.stop()
+    if tts != null:
+        tts.stop()
 
 func get_is_rate_supported():
-    return tts.is_rate_supported()
+    if tts != null:
+        return tts.is_rate_supported()
+    else:
+        return false
 
 var is_rate_supported setget , get_is_rate_supported
 
