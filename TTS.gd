@@ -8,10 +8,10 @@ var tts = null
 func _ready():
     # Only initialize TTS if it's available or if we're in the editor.
     if TTS.can_instance() or Engine.editor_hint:
-        print("Attempting to load TTS.")
+        print_debug("Attempting to load TTS.")
         tts = TTS.new()
     else:
-        print("TTS not available!")
+        print_debug("TTS not available!")
 
 func set_rate(rate):
     if tts != null:
@@ -26,6 +26,7 @@ func get_rate():
 var rate setget set_rate, get_rate
 
 func speak(text, interrupt := true):
+    print_debug("%s: %s" % [text, interrupt])
     if tts != null:
         tts.speak(text, interrupt)
 

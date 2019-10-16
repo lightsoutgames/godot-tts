@@ -54,7 +54,6 @@ impl TTS {
     #[export]
     fn speak(&mut self, _owner: Node, message: GodotString, interrupt: bool) {
         let message = message.to_string();
-        println!("{}: {}", message, interrupt);
         self.0.speak(message, interrupt).unwrap();
     }
 
