@@ -35,7 +35,8 @@ impl NativeClass for TTS {
                 if v > 100 {
                     v = 100;
                 }
-                let v = v / 100 * u8::MAX;
+                let mut v = v as f32;
+                v = v * u8::MAX as f32 / 100.;
                 this.0.set_rate(v as u8).unwrap();
             },
             usage: PropertyUsage::DEFAULT,
