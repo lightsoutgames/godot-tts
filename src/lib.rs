@@ -28,8 +28,10 @@ impl NativeClass for TTS {
                 slider: true,
             },
             getter: |this: &TTS| {
-                let rate = this.0.get_rate().unwrap();
-                rate / u8::MAX * 100
+                match this.0.get_rate() {
+                    Ok(rate) => rate / u8::MAX * 100,
+                    _ => 0,
+                }
             },
             setter: |this: &mut TTS, mut v: u8| {
                 if v > 100 {
@@ -37,7 +39,12 @@ impl NativeClass for TTS {
                 }
                 let mut v = v as f32;
                 v = v * u8::MAX as f32 / 100.;
-                this.0.set_rate(v as u8).unwrap();
+                let Features {
+                    rate: rate_supported, ..
+                } = this.0.supported_features();
+                if rate_supported {
+                    this.0.set_rate(v as u8).unwrap();
+                }
             },
             usage: PropertyUsage::DEFAULT,
         });
@@ -65,9 +72,9 @@ impl TTS {
     #[export]
     fn is_rate_supported(&mut self, _owner: Node) -> bool {
         let Features {
-            rate: rate_feature, ..
+            rate: rate_supported, ..
         } = self.0.supported_features();
-        rate_feature
+        rate_supported
     }
 }
 
