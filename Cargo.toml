@@ -1,6 +1,6 @@
 [package]
 name = "godot-tts"
-version = "0.1.0"
+version = "0.1.3"
 authors = ["Nolan Darilek <nolan@thewordnerd.info>"]
 edition = "2018"
 
