@@ -16,6 +16,20 @@ build linux:
     paths:
     - linux
     expire_in: 1 day
+  tags:
+  - linux
+
+build windows:
+  stage: build
+  script:
+  - cargo build --release
+  - move target windows
+  artifacts:
+    paths:
+    - windows
+    expire_in: 1 day
+  tags:
+  - windows
 
 package:
   stage: package
@@ -24,6 +38,7 @@ package:
   - cp godot-tts.gdnlib.release godot-tts/godot-tts.gdnlib
   - mkdir -p godot-tts/target/release
   - cp linux/release/*.so godot-tts/target/release
+  - cp windows/release/*.dll godot-tts/target/release
   - cp LICENSE godot-tts
   - cp TTS.gd godot-tts.g* godot-tts
   - cp godot-tts.gdnlib.release godot-tts/godot-tts.gdnlib
@@ -33,6 +48,8 @@ package:
     paths:
     - godot-tts
     expire_in: 1 day
+  tags:
+  - linux
 
 publish:
   stage: publish
@@ -44,3 +61,5 @@ publish:
     - godot-tts
   only:
   - tags
+  tags:
+  - linux
