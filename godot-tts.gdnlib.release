@@ -5,6 +5,7 @@ X11.64="res://addons/godot-tts/target/release/libgodot_tts.so"
 
 [dependencies]
 
+Windows.64=["res://addons/godot-tts/target/release/nvdaControllerClient64.dll", "res://addons/godot-tts/target/release/SAAPI64.dll"]
 X11.64=[  ]
 
 [general]
