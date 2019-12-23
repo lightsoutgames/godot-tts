@@ -47,3 +47,6 @@ func singular_or_plural(count, singular, plural):
         return singular
     else:
         return plural
+
+func _exit_tree():
+    tts.free()
