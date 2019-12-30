@@ -10,6 +10,8 @@ func _ready():
     if TTS.can_instance() or Engine.editor_hint:
         print_debug("Attempting to load TTS.")
         tts = TTS.new()
+    elif Engine.has_singleton("AndroidTTS"):
+        tts = Engine.get_singleton("AndroidTTS")
     else:
         print_debug("TTS not available!")
 
@@ -35,7 +37,9 @@ func stop():
         tts.stop()
 
 func get_is_rate_supported():
-    if tts != null:
+    if Engine.get_singleton("AndroidTTS"):
+        return false
+    elif tts != null:
         return tts.is_rate_supported()
     else:
         return false
