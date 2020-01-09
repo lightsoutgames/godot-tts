@@ -6,6 +6,8 @@ var TTS
 var tts = null
 
 func _ready():
+    if not TTS:
+        return
     if not OS.has_feature('JavaScript') and not Engine.has_singleton("AndroidTTS"):
         TTS  = preload("godot-tts.gdns")
     if OS.has_feature('JavaScript'):
@@ -77,4 +79,6 @@ func singular_or_plural(count, singular, plural):
         return plural
 
 func _exit_tree():
+    if not tts or not TTS:
+        return
     tts.free()
