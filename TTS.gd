@@ -6,15 +6,13 @@ var TTS
 var tts = null
 
 func _ready():
-    if not TTS:
+    if OS.has_feature("JavaScript"):
         return
-    if not OS.has_feature('JavaScript') and not Engine.has_singleton("AndroidTTS"):
-        TTS  = preload("godot-tts.gdns")
-    if OS.has_feature('JavaScript'):
-        pass
     elif Engine.has_singleton("AndroidTTS"):
         tts = Engine.get_singleton("AndroidTTS")
-    elif TTS.can_instance() or Engine.editor_hint:
+    else:
+        TTS  = preload("godot-tts.gdns")
+    if TTS and (TTS.can_instance() or Engine.editor_hint):
         tts = TTS.new()
     else:
         print_debug("TTS not available!")
