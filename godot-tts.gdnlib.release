@@ -1,5 +1,6 @@
 [entry]
 
+Server.64="res://addons/godot-tts/target/debug/libgodot_tts.so"
 Windows.64="res://addons/godot-tts/target/release/godot_tts.dll"
 X11.64="res://addons/godot-tts/target/release/libgodot_tts.so"
 
