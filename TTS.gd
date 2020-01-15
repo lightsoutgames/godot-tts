@@ -3,7 +3,7 @@ extends Node
 
 var TTS
 
-var tts = null
+var tts
 
 func _ready():
     if OS.get_name() == "Server" or OS.has_feature("JavaScript"):
