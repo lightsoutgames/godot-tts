@@ -70,6 +70,14 @@ func get_is_rate_supported():
 
 var is_rate_supported setget , get_is_rate_supported
 
+func get_can_detect_screen_reader():
+    if OS.get_name() == "Windows":
+        return true
+    else:
+        return false
+
+var can_detect_screen_reader setget , get_can_detect_screen_reader
+
 func singular_or_plural(count, singular, plural):
     if count == 1:
         return singular
