@@ -36,7 +36,6 @@ func get_rate():
 var rate setget set_rate, get_rate
 
 func speak(text, interrupt := true):
-    print_debug("%s: %s" % [text, interrupt])
     if tts != null:
         tts.speak(text, interrupt)
     elif OS.has_feature('JavaScript'):
@@ -51,6 +50,8 @@ func speak(text, interrupt := true):
             """
         code += "window.speechSynthesis.speak(utterance)"
         JavaScript.eval(code)
+    else:
+        print_debug("%s: %s" % [text, interrupt])
 
 func stop():
     if tts != null:
