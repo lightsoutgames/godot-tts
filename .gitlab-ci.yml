@@ -22,7 +22,6 @@ build linux:
 build windows:
   stage: build
   script:
-  - echo %PATH%
   - rustup default stable
   - cargo build --release
   - move target windows
@@ -31,7 +30,10 @@ build windows:
     - windows
     expire_in: 1 day
   tags:
+  - shared-windows
   - windows
+  - windows-1809
+
 
 package:
   stage: package
