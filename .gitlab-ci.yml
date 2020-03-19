@@ -22,9 +22,7 @@ build linux:
 build windows:
   stage: build
   script:
-  - choco install -y llvm rustup
-  - rustup update
-  - rustup default stable
+  - choco install -y llvm rust-ms
   - cargo build --release
   - move target windows
   artifacts:
