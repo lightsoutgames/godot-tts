@@ -1,61 +1,44 @@
 use std::u8;
 
-use gdnative::*;
 use gdnative::init::*;
+use gdnative::*;
 use tts::{Features, TTS as Tts};
 
+#[derive(NativeClass)]
+#[inherit(Node)]
+#[register_with(Self::register_properties)]
 struct TTS(Tts);
-
-impl NativeClass for TTS {
-    type Base = Node;
-    type UserData = user_data::MutexData<TTS>;
-
-    fn class_name() -> &'static str {
-        "TTS"
-    }
-
-    fn init(owner: Self::Base) -> Self {
-        Self::_init(owner)
-    }
-
-    fn register_properties(builder: &ClassBuilder<Self>) {
-        builder.add_property(Property {
-            name: "rate",
-            default: 50,
-            hint: PropertyHint::Range {
-                range: 0.0..100.0,
-                step: 1.,
-                slider: true,
-            },
-            getter: |this: &TTS| {
-                match this.0.get_rate() {
-                    Ok(rate) => rate / u8::MAX * 100,
-                    _ => 0,
-                }
-            },
-            setter: |this: &mut TTS, mut v: u8| {
-                if v > 100 {
-                    v = 100;
-                }
-                let mut v = v as f32;
-                v = v * u8::MAX as f32 / 100.;
-                let Features {
-                    rate: rate_supported, ..
-                } = this.0.supported_features();
-                if rate_supported {
-                    this.0.set_rate(v as u8).unwrap();
-                }
-            },
-            usage: PropertyUsage::DEFAULT,
-        });
-    }
-}
 
 #[methods]
 impl TTS {
     fn _init(_owner: gdnative::Node) -> Self {
         let tts = Tts::default().unwrap();
         Self(tts)
+    }
+
+    fn register_properties(builder: &ClassBuilder<Self>) {
+        builder
+            .add_property::<u8>("rate")
+            .with_default(50)
+            .with_getter(|this: &TTS, _| match this.0.get_rate() {
+                Ok(rate) => rate / u8::MAX * 100,
+                _ => 0,
+            })
+            .with_setter(|this: &mut TTS, _, mut v: u8| {
+                if v > 100 {
+                    v = 100;
+                }
+                let mut v = v as f32;
+                v = v * u8::MAX as f32 / 100.;
+                let Features {
+                    rate: rate_supported,
+                    ..
+                } = this.0.supported_features();
+                if rate_supported {
+                    this.0.set_rate(v as u8).unwrap();
+                }
+            })
+            .done()
     }
 
     #[export]
@@ -72,7 +55,8 @@ impl TTS {
     #[export]
     fn is_rate_supported(&mut self, _owner: Node) -> bool {
         let Features {
-            rate: rate_supported, ..
+            rate: rate_supported,
+            ..
         } = self.0.supported_features();
         rate_supported
     }
