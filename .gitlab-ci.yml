@@ -23,8 +23,7 @@ build windows:
   stage: build
   script:
   - choco install -y llvm rust-ms
-  - rustup toolchain list
-  - cargo build --release
+  - cargo build --release --target x86_64-pc-windows-msvc
   - move target windows
   artifacts:
     paths:
