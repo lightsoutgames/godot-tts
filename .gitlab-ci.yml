@@ -22,8 +22,7 @@ build linux:
 build windows:
   stage: build
   script:
-  - choco install llvm
-  - choco install rustup
+  - choco install -y llvm rustup
   - rustup update
   - rustup default stable
   - cargo build --release
