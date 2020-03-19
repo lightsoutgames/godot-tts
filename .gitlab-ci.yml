@@ -23,6 +23,7 @@ build windows:
   stage: build
   script:
   - choco install -y llvm rust-ms
+  - rustup toolchain list
   - cargo build --release
   - move target windows
   artifacts:
@@ -33,7 +34,6 @@ build windows:
   - shared-windows
   - windows
   - windows-1809
-
 
 package:
   stage: package
