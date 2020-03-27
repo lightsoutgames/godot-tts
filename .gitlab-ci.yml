@@ -26,7 +26,6 @@ build windows:
     - wget https://win.rustup.rs/x86_64 -O rustup-init.exe
     - .\rustup-init.exe -y --default-host=x86_64-pc-windows-msvc
     - $env:PATH+=";$env:USERPROFILE\.cargo\bin"
-    - echo $env:PATH
     - refreshenv
     - cargo build --release --target x86_64-pc-windows-msvc
     - move target windows
