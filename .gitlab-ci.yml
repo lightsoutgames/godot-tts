@@ -22,8 +22,9 @@ build linux:
 build windows:
   stage: build
   script:
-    - choco install -y llvm rust-ms
-    - systeminfo
+    - choco install -y llvm
+    - wget https://win.rustup.rs/x86_64 -O rustup-init.exe
+    - rustup-init
     - cargo build --release --target x86_64-pc-windows-msvc
     - move target windows
   artifacts:
