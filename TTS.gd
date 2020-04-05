@@ -52,7 +52,7 @@ func speak(text, interrupt := true):
         var code = """
             let utterance = new SpeechSynthesisUtterance("%s")
             utterance.rate = %s
-        """ % [text, scaled_rate]
+        """ % [text.replace("\n", " "), scaled_rate]
         if interrupt:
             code += """
                 window.speechSynthesis.cancel()
