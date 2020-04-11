@@ -59,3 +59,8 @@ jobs:
         cp TTS.gd godot-tts.g* godot-tts
         cp godot-tts.gdnlib.release godot-tts/godot-tts.gdnlib
         rm godot-tts/*.release
+        zip -r9 godot-tts.zip godot-tts
+    - uses: actions/upload-artifact@v1
+      with:
+        name: godot-tts
+        path: godot-tts.zip
