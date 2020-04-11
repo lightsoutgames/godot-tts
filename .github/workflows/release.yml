@@ -18,10 +18,11 @@ jobs:
         sudo apt-get install -y libspeechd-dev
         cargo build --release --verbose
         mv target linux
-    uses: actions/upload-artifact@v1
+    - uses: actions/upload-artifact@v1
       with:
         name: linux
         path: linux
+
   build_windows:
     name: Build Windows
     runs-on: windows-latest
@@ -31,7 +32,7 @@ jobs:
         choco install -y llvm
         cargo build --release --verbose
         move target windows
-    uses: actions/upload-artifact@v1
+    - uses: actions/upload-artifact@v1
       with:
         name: windows
         path: windows
