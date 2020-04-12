@@ -43,12 +43,12 @@ func speak(text, interrupt := true):
     if tts != null:
         tts.speak(text, interrupt)
     elif OS.has_feature('JavaScript'):
-        var scaled_rate
+        var scaled_rate: float
         if javascript_rate <= 50:
-            scaled_rate = javascript_rate / 50
+            scaled_rate = javascript_rate / 50.0
         else:
             scaled_rate = javascript_rate - 50
-            scaled_rate = 1 + (scaled_rate / 5)
+            scaled_rate = 1 + (scaled_rate / 5.0)
         var code = """
             let utterance = new SpeechSynthesisUtterance("%s")
             utterance.rate = %s
