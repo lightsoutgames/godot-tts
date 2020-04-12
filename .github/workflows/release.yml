@@ -2,9 +2,8 @@ name: Release
 
 on:
   push:
-    branches: [ master ]
-  pull_request:
-    branches: [ master ]
+    tags:
+    - 'v*'
 
 jobs:
 
@@ -59,7 +58,22 @@ jobs:
         cp TTS.gd godot-tts.g* godot-tts
         cp godot-tts.gdnlib.release godot-tts/godot-tts.gdnlib
         rm godot-tts/*.release
-    - uses: actions/upload-artifact@v1
+        zip -r9 gotot-tts godot-tts
+    - uses: actions/create-release@v1
+      id: create_release
+      env:
+        GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
       with:
-        name: godot-tts
-        path: godot-tts
+        tag_name: ${{ github.ref }}
+        release_name: Release ${{ github.ref }}
+        draft: false
+        prerelease: false
+    - uses: actions/upload-release-asset@v1
+      id: upload-release-asset 
+      env:
+        GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+      with:
+        upload_url: ${{ steps.create_release.outputs.upload_url }}
+        asset_path: ./godot-tts.zip
+        asset_name: godot-tts.zip
+        asset_content_type: application/zip
