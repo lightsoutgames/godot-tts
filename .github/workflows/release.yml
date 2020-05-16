@@ -58,6 +58,7 @@ jobs:
         cp TTS.gd godot-tts.g* godot-tts
         cp godot-tts.gdnlib.release godot-tts/godot-tts.gdnlib
         rm godot-tts/*.release
+        cp -R android godot-tts
         zip -r9 godot-tts godot-tts
     - uses: actions/create-release@v1
       id: create_release
