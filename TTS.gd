@@ -70,7 +70,7 @@ func stop():
 
 func get_is_rate_supported():
     if Engine.get_singleton("AndroidTTS"):
-        return false
+        return true
     elif OS.has_feature('JavaScript'):
         return true
     elif tts != null:
