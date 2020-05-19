@@ -127,13 +127,27 @@ func get_is_rate_supported():
 
 var is_rate_supported setget , get_is_rate_supported
 
-func get_can_detect_screen_reader():
-    if OS.get_name() == "Windows":
+func _get_can_detect_screen_reader():
+    if Engine.has_singleton("AndroidTTS"):
         return true
-    else:
+    elif OS.has_feature('JavaScript'):
         return false
+    elif tts != null:
+        return tts.can_detect_screen_reader
+    return false
 
-var can_detect_screen_reader setget , get_can_detect_screen_reader
+var can_detect_screen_reader setget , _get_can_detect_screen_reader
+
+func _get_has_screen_reader():
+    if Engine.has_singleton("AndroidTTS"):
+        return tts.has_screen_reader()
+    elif OS.has_feature('JavaScript'):
+        return false
+    elif tts != null:
+        return tts.has_screen_reader
+    return false
+
+var has_screen_reader setget , _get_has_screen_reader
 
 func singular_or_plural(count, singular, plural):
     if count == 1:

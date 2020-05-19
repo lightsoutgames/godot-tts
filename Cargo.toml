@@ -10,3 +10,6 @@ crate-type = ["cdylib"]
 [dependencies]
 gdnative = "0.8"
 tts = { git = "https://gitlab.com/ndarilek/tts-rs" }
+
+[target.'cfg(windows)'.dependencies]
+tolk = "0.2"
