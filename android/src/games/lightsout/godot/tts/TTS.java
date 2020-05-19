@@ -32,15 +32,12 @@ public class TTS extends Godot.SingletonBase implements TextToSpeech.OnInitListe
         tts.stop();
     }
 
+    public float get_rate() {
+        return tts.getSpeechRate();
+    }
+
     public void set_rate(Float rate) {
-        Float newRate;
-        if (rate <= 50)
-            newRate = rate / 50;
-        else {
-            newRate = rate - 50;
-            newRate = 1 + (newRate / 5);
-        }
-        tts.setSpeechRate(newRate);
+        tts.setSpeechRate(rate);
     }
 
     public void getInstanceId(int pInstanceId) {
@@ -59,7 +56,7 @@ public class TTS extends Godot.SingletonBase implements TextToSpeech.OnInitListe
         this.appContext = appActivity.getApplicationContext();
         this.tts = new TextToSpeech(this.appContext, this);
         // Register class name and functions to bind.
-        registerClass("AndroidTTS", new String[] { "speak", "stop", "set_rate", "getInstanceId" });
+        registerClass("AndroidTTS", new String[] { "speak", "stop", "get_rate", "set_rate", "getInstanceId" });
         this.activity.runOnUiThread(new Runnable() {
             public void run() {
             }

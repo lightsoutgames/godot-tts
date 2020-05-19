@@ -55,25 +55,29 @@ var normal_rate setget , _get_normal_rate
 
 var javascript_rate = 50
 
-func set_rate(rate):
+func _set_rate(rate):
     if rate < self.min_rate:
         rate = self.min_rate
     elif rate > self.max_rate:
         rate = self.max_rate
-    if tts != null:
+    if Engine.has_singleton("AndroidTTS"):
+        return tts.set_rate(rate)
+    elif tts != null:
         tts.rate = rate
     elif OS.has_feature('JavaScript'):
         javascript_rate = rate
 
-func get_rate():
-    if tts != null:
+func _get_rate():
+    if Engine.has_singleton("AndroidTTS"):
+        return tts.get_rate()
+    elif tts != null:
         return tts.rate
     elif OS.has_feature('JavaScript'):
         return javascript_rate
     else:
         return 0
 
-var rate setget set_rate, get_rate
+var rate setget _set_rate, _get_rate
 
 func _get_rate_percentage():
     return range_lerp(self.rate, self.min_rate, self.max_rate, 0, 100)
