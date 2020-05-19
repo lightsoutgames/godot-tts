@@ -93,9 +93,9 @@ impl TTS {
                 #[cfg(windows)]
                 {
                     let tolk = tolk::Tolk::new();
-                    tolk.detect_screen_reader().is_some()
+                    return tolk.detect_screen_reader().is_some()
                 }
-                false
+                return false;
             })
             .done();
     }
