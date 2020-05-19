@@ -9,4 +9,4 @@ crate-type = ["cdylib"]
 
 [dependencies]
 gdnative = "0.8"
-tts = "0.2"
+tts = { git = "https://gitlab.com/ndarilek/tts-rs" }

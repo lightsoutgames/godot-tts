@@ -1,5 +1,3 @@
-use std::u8;
-
 use gdnative::init::*;
 use gdnative::*;
 use tts::{Features, TTS as Tts};
@@ -18,27 +16,69 @@ impl TTS {
 
     fn register_properties(builder: &ClassBuilder<Self>) {
         builder
-            .add_property::<u8>("rate")
-            .with_default(50)
+            .add_property("rate")
             .with_getter(|this: &TTS, _| match this.0.get_rate() {
-                Ok(rate) => rate / u8::MAX * 100,
-                _ => 0,
+                Ok(rate) => rate,
+                _ => 0.,
             })
-            .with_setter(|this: &mut TTS, _, mut v: u8| {
-                if v > 100 {
-                    v = 100;
-                }
-                let mut v = v as f32;
-                v = v * u8::MAX as f32 / 100.;
+            .with_setter(|this: &mut TTS, _, v: f32| {
                 let Features {
                     rate: rate_supported,
                     ..
                 } = this.0.supported_features();
                 if rate_supported {
-                    this.0.set_rate(v as u8).unwrap();
+                    let mut v = v;
+                    if v < this.0.min_rate() {
+                        v = this.0.min_rate();
+                    } else if v > this.0.max_rate() {
+                        v = this.0.max_rate();
+                    }
+                    this.0.set_rate(v).unwrap();
                 }
             })
-            .done()
+            .done();
+        builder
+            .add_property("min_rate")
+            .with_getter(|this: &TTS, _| {
+                let Features {
+                    rate: rate_supported,
+                    ..
+                } = this.0.supported_features();
+                if rate_supported {
+                    this.0.min_rate()
+                } else {
+                    0.
+                }
+            })
+            .done();
+        builder
+            .add_property("max_rate")
+            .with_getter(|this: &TTS, _| {
+                let Features {
+                    rate: rate_supported,
+                    ..
+                } = this.0.supported_features();
+                if rate_supported {
+                    this.0.max_rate()
+                } else {
+                    0.
+                }
+            })
+            .done();
+        builder
+            .add_property("normal_rate")
+            .with_getter(|this: &TTS, _| {
+                let Features {
+                    rate: rate_supported,
+                    ..
+                } = this.0.supported_features();
+                if rate_supported {
+                    this.0.normal_rate()
+                } else {
+                    0.
+                }
+            })
+            .done();
     }
 
     #[export]
