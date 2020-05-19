@@ -22,7 +22,7 @@ Text-to-speech is complicated, and some features may not work everywhere. Most o
 
 ## API
 
-The public-facing API is contained entirely within [TTS.GD](TTS.GD).
+The public-facing API is contained entirely within [TTS.GD](https://github.com/lightsoutgames/godot-tts/blob/master/TTS.gd).
 
 ## Download
 
