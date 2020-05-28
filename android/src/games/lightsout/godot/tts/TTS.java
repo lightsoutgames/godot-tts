@@ -1,10 +1,15 @@
 package games.lightsout.godot.tts;
 
+import java.util.List;
+
+import android.accessibilityservice.AccessibilityServiceInfo;
 import android.app.Activity;
 import android.content.Intent;
 import android.content.Context;
 import android.speech.tts.TextToSpeech;
 import android.util.Log;
+import android.view.accessibility.AccessibilityManager;
+
 import com.godot.game.R;
 import javax.microedition.khronos.opengles.GL10;
 import org.godotengine.godot.Godot;
@@ -17,6 +22,8 @@ public class TTS extends Godot.SingletonBase implements TextToSpeech.OnInitListe
     private int instanceId = 0;
 
     private TextToSpeech tts = null;
+
+    private float rate = 1f;
 
     private Integer utteranceId = 0;
 
@@ -33,11 +40,22 @@ public class TTS extends Godot.SingletonBase implements TextToSpeech.OnInitListe
     }
 
     public float get_rate() {
-        return tts.getSpeechRate();
+        return this.rate;
     }
 
     public void set_rate(Float rate) {
+        this.rate = rate;
         tts.setSpeechRate(rate);
+    }
+
+    public boolean has_screen_reader() {
+        AccessibilityManager accessibilityManager = (AccessibilityManager) appContext
+                .getSystemService(Context.ACCESSIBILITY_SERVICE);
+        if (accessibilityManager != null) {
+            List<AccessibilityServiceInfo> screenReaders =accessibilityManager.getEnabledAccessibilityServiceList(AccessibilityServiceInfo.FEEDBACK_SPOKEN);
+            return screenReaders.size() != 0;
+        } else
+            return false;
     }
 
     public void getInstanceId(int pInstanceId) {
