@@ -43,7 +43,7 @@ public class TTS extends Godot.SingletonBase implements TextToSpeech.OnInitListe
         return this.rate;
     }
 
-    public void set_rate(Float rate) {
+    public void set_rate(float rate) {
         this.rate = rate;
         tts.setSpeechRate(rate);
     }
