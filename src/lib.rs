@@ -93,9 +93,33 @@ impl TTS {
                 #[cfg(windows)]
                 {
                     let tolk = tolk::Tolk::new();
-                    return tolk.detect_screen_reader().is_some()
+                    return tolk.detect_screen_reader().is_some();
                 }
                 return false;
+            })
+            .done();
+        builder
+            .add_property("can_detect_is_speaking")
+            .with_getter(|this: &TTS, _| {
+                let Features {
+                    is_speaking: is_speaking_supported,
+                    ..
+                } = this.0.supported_features();
+                return is_speaking_supported;
+            })
+            .done();
+        builder
+            .add_property("is_speaking")
+            .with_getter(|this: &TTS, _| {
+                let Features {
+                    is_speaking: is_speaking_supported,
+                    ..
+                } = this.0.supported_features();
+                if is_speaking_supported {
+                    return this.0.is_speaking().unwrap();
+                } else {
+                    return false;
+                }
             })
             .done();
     }

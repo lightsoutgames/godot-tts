@@ -5,6 +5,8 @@ var TTS
 
 var tts
 
+signal done
+
 
 func _ready():
 	if OS.get_name() == "Server" or OS.has_feature("JavaScript"):
@@ -150,6 +152,32 @@ func get_is_rate_supported():
 var is_rate_supported setget , get_is_rate_supported
 
 
+func _get_can_detect_is_speaking():
+	if Engine.has_singleton("AndroidTTS"):
+		return true
+	elif OS.has_feature('JavaScript'):
+		return true
+	elif tts != null:
+		return tts.can_detect_is_speaking
+	return false
+
+
+var can_detect_is_speaking setget , _get_can_detect_is_speaking
+
+
+func _get_is_speaking():
+	if Engine.has_singleton("AndroidTTS"):
+		return tts.is_speaking()
+	elif OS.has_feature('JavaScript'):
+		return JavaScript.eval("window.speechSynthesis.speaking")
+	elif tts != null:
+		return tts.is_speaking
+	return false
+
+
+var is_speaking setget , _get_is_speaking
+
+
 func _get_can_detect_screen_reader():
 	if Engine.has_singleton("AndroidTTS"):
 		return true
@@ -181,6 +209,19 @@ func singular_or_plural(count, singular, plural):
 		return singular
 	else:
 		return plural
+
+
+var _was_speaking = false
+
+
+func _process(delta):
+	if self.is_speaking:
+		print("xxx Speaking")
+		_was_speaking = true
+	elif _was_speaking:
+		print("xxx Done")
+		emit_signal("done")
+		_was_speaking = false
 
 
 func _exit_tree():

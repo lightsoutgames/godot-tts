@@ -2,17 +2,13 @@ package games.lightsout.godot.tts;
 
 import java.util.List;
 
+import org.godotengine.godot.Godot;
+
 import android.accessibilityservice.AccessibilityServiceInfo;
 import android.app.Activity;
-import android.content.Intent;
 import android.content.Context;
 import android.speech.tts.TextToSpeech;
-import android.util.Log;
 import android.view.accessibility.AccessibilityManager;
-
-import com.godot.game.R;
-import javax.microedition.khronos.opengles.GL10;
-import org.godotengine.godot.Godot;
 
 public class TTS extends Godot.SingletonBase implements TextToSpeech.OnInitListener {
 
@@ -48,14 +44,20 @@ public class TTS extends Godot.SingletonBase implements TextToSpeech.OnInitListe
         tts.setSpeechRate(rate);
     }
 
+    public boolean is_speaking() {
+        return tts.isSpeaking();
+    }
+
     public boolean has_screen_reader() {
         AccessibilityManager accessibilityManager = (AccessibilityManager) appContext
                 .getSystemService(Context.ACCESSIBILITY_SERVICE);
         if (accessibilityManager != null) {
-            List<AccessibilityServiceInfo> screenReaders =accessibilityManager.getEnabledAccessibilityServiceList(AccessibilityServiceInfo.FEEDBACK_SPOKEN);
+            List<AccessibilityServiceInfo> screenReaders = accessibilityManager
+                    .getEnabledAccessibilityServiceList(AccessibilityServiceInfo.FEEDBACK_SPOKEN);
             return screenReaders.size() != 0;
-        } else
+        } else {
             return false;
+        }
     }
 
     public void getInstanceId(int pInstanceId) {
@@ -74,7 +76,8 @@ public class TTS extends Godot.SingletonBase implements TextToSpeech.OnInitListe
         this.appContext = appActivity.getApplicationContext();
         this.tts = new TextToSpeech(this.appContext, this);
         // Register class name and functions to bind.
-        registerClass("AndroidTTS", new String[] { "speak", "stop", "get_rate", "set_rate", "getInstanceId" });
+        registerClass("AndroidTTS", new String[] { "speak", "stop", "get_rate", "set_rate", "has_screen_reader",
+                "is_speaking", "getInstanceId" });
         this.activity.runOnUiThread(new Runnable() {
             public void run() {
             }
