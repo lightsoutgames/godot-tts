@@ -148,6 +148,7 @@ impl TTS {
 }
 
 fn init(handle: gdnative::init::InitHandle) {
+    env_logger::init();
     handle.add_class::<TTS>();
 }
 

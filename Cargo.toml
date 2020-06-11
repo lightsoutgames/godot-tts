@@ -8,6 +8,7 @@ edition = "2018"
 crate-type = ["cdylib"]
 
 [dependencies]
+env_logger = "0.7"
 gdnative = "0.8"
 tts = "0.3"
 
