@@ -82,9 +82,11 @@ impl TTS {
         builder
             .add_property("can_detect_screen_reader")
             .with_getter(|_: &TTS, _| {
-                #[cfg(windows)]
-                return true;
-                return false;
+                if cfg!(windows) {
+                    true
+                } else {
+                    false
+                }
             })
             .done();
         builder
@@ -95,7 +97,7 @@ impl TTS {
                     let tolk = tolk::Tolk::new();
                     return tolk.detect_screen_reader().is_some();
                 }
-                return false;
+                false
             })
             .done();
         builder
