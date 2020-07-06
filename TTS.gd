@@ -9,6 +9,7 @@ signal done
 
 
 func _ready():
+	pause_mode = Node.PAUSE_MODE_PROCESS
 	if OS.get_name() == "Server" or OS.has_feature("JavaScript"):
 		return
 	elif Engine.has_singleton("AndroidTTS"):
