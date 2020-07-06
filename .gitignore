@@ -1,3 +1,7 @@
 /target
 **/*.rs.bk
 Cargo.lock
+bazel-bin
+bazel-godot-tts
+bazel-out
+bazel-testlogs
