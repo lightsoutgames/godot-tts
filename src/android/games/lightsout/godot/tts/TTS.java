@@ -1,8 +1,10 @@
 package games.lightsout.godot.tts;
 
+import java.util.Arrays;
 import java.util.List;
 
 import org.godotengine.godot.Godot;
+import org.godotengine.godot.plugin.GodotPlugin;
 
 import android.accessibilityservice.AccessibilityServiceInfo;
 import android.app.Activity;
@@ -10,13 +12,7 @@ import android.content.Context;
 import android.speech.tts.TextToSpeech;
 import android.view.accessibility.AccessibilityManager;
 
-public class TTS extends Godot.SingletonBase implements TextToSpeech.OnInitListener {
-
-    protected Activity appActivity;
-    protected Context appContext;
-    private Godot activity = null;
-    private int instanceId = 0;
-
+public class TTS extends GodotPlugin implements TextToSpeech.OnInitListener {
     private TextToSpeech tts = null;
 
     private float rate = 1f;
@@ -49,7 +45,7 @@ public class TTS extends Godot.SingletonBase implements TextToSpeech.OnInitListe
     }
 
     public boolean has_screen_reader() {
-        AccessibilityManager accessibilityManager = (AccessibilityManager) appContext
+        AccessibilityManager accessibilityManager = (AccessibilityManager) getActivity()
                 .getSystemService(Context.ACCESSIBILITY_SERVICE);
         if (accessibilityManager != null) {
             List<AccessibilityServiceInfo> screenReaders = accessibilityManager
@@ -60,29 +56,17 @@ public class TTS extends Godot.SingletonBase implements TextToSpeech.OnInitListe
         }
     }
 
-    public void getInstanceId(int pInstanceId) {
-        // You will need to call this method from Godot and pass in the
-        // get_instance_id().
-        instanceId = pInstanceId;
+    public TTS(Godot godot) {
+        super(godot);
+        this.tts = new TextToSpeech(this.getActivity(), this);
     }
 
-    static public Godot.SingletonBase initialize(Activity p_activity) {
-        return new TTS(p_activity);
+    public String getPluginName() {
+        return "GodotTTS";
     }
 
-    public TTS(Activity p_activity) {
-        this.activity = (Godot) p_activity;
-        this.appActivity = p_activity;
-        this.appContext = appActivity.getApplicationContext();
-        this.tts = new TextToSpeech(this.appContext, this);
-        // Register class name and functions to bind.
-        registerClass("AndroidTTS", new String[] { "speak", "stop", "get_rate", "set_rate", "has_screen_reader",
-                "is_speaking", "getInstanceId" });
-        this.activity.runOnUiThread(new Runnable() {
-            public void run() {
-            }
-        });
-
+    public List<String> getPluginMethods() {
+        return Arrays.asList("speak", "stop", "get_rate", "set_rate", "has_screen_reader", "is_speaking");
     }
 
     public void onInit(int status) {

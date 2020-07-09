@@ -1,0 +1,13 @@
+load("@build_bazel_rules_android//android:rules.bzl", "aar_import", "android_library")
+
+aar_import(
+    name = "godot",
+    aar = "godot-lib.3.2.2.stable.release.aar",
+)
+
+android_library(
+    name = "godot_tts",
+    srcs = ["TTS.java"],
+    manifest = "AndroidManifest.xml",
+    deps = [":godot"],
+)
