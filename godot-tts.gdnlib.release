@@ -4,6 +4,7 @@ Server.64="res://addons/godot-tts/target/release/libgodot_tts.so"
 Windows.64="res://addons/godot-tts/target/release/godot_tts.dll"
 UWP.64="res://addons/godot-tts/target/release/godot_tts.dll"
 X11.64="res://addons/godot-tts/target/release/libgodot_tts.so"
+OSX.64="res://addons/godot-tts/target/release/libgodot_tts.dylib"
 
 [dependencies]
 
