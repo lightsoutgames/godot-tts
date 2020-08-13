@@ -219,10 +219,8 @@ var _was_speaking = false
 
 func _process(delta):
 	if self.is_speaking:
-		print("xxx Speaking")
 		_was_speaking = true
 	elif _was_speaking:
-		print("xxx Done")
 		emit_signal("done")
 		_was_speaking = false
 
