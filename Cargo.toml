@@ -10,7 +10,7 @@ crate-type = ["cdylib"]
 [dependencies]
 env_logger = "0.7"
 gdnative = "0.8"
-tts = "0.4"
+tts = "0.5"
 
 [target.'cfg(windows)'.dependencies]
 tolk = "0.2"
