@@ -2,7 +2,7 @@ load("@build_bazel_rules_android//android:rules.bzl", "aar_import", "android_lib
 
 aar_import(
     name = "godot",
-    aar = "godot-lib.3.2.2.stable.release.aar",
+    aar = "@godot_lib",
 )
 
 android_library(
