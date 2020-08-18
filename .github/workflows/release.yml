@@ -63,10 +63,25 @@ jobs:
           name: android
           path: android
 
+  build_macos:
+    name: Build MacOS
+    runs-on: macos-latest
+    steps:
+      - uses: actions/checkout@v2
+      - run: |
+          rustup target add aarch64-apple-ios x86_64-apple-ios
+          cargo install cargo-lipo
+          cargo lipo --release
+          mv target ios
+      - uses: actions/upload-artifact@v1
+        with:
+          name: ios
+          path: ios
+
   package:
     name: Package
     runs-on: ubuntu-latest
-    needs: [build_linux, build_windows, build_macos, build_android]
+    needs: [build_linux, build_windows, build_macos, build_android, build_ios]
     steps:
       - uses: actions/checkout@v2
       - uses: actions/download-artifact@v1
@@ -81,6 +96,9 @@ jobs:
       - uses: actions/download-artifact@v1
         with:
           name: android
+      - uses: actions/download-artifact@v1
+        with:
+          name: ios
       - run: |
           mkdir godot-tts
           cp godot-tts.gdnlib.release godot-tts/godot-tts.gdnlib
@@ -90,6 +108,7 @@ jobs:
           cp windows/release/*.dll godot-tts/target/release
           cp macos/release/*.dylib godot-tts/target/release
           cp android/outputs/aar/godot-tts.aar godot-tts/
+          cp ios/universal/release/*.a godot-tts/target/release
           cp LICENSE godot-tts
           cp README.md godot-tts
           cp TTS.gd godot-tts.g* godot-tts
