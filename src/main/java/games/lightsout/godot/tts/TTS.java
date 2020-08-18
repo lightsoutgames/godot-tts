@@ -1,6 +1,7 @@
 package games.lightsout.godot.tts;
 
 import java.util.Arrays;
+import java.util.HashMap;
 import java.util.List;
 
 import org.godotengine.godot.Godot;
@@ -17,14 +18,15 @@ public class TTS extends GodotPlugin implements TextToSpeech.OnInitListener {
 
     private float rate = 1f;
 
-    private Integer utteranceId = 0;
+    // private Integer utteranceId = 0;
 
     public void speak(String text, boolean interrupt) {
         int mode = TextToSpeech.QUEUE_ADD;
         if (interrupt)
             mode = TextToSpeech.QUEUE_FLUSH;
-        tts.speak(text, mode, null, this.utteranceId.toString());
-        this.utteranceId++;
+        HashMap<String, String> params = new HashMap();
+        tts.speak(text, mode, params);
+        // this.utteranceId++;
     }
 
     public void stop() {
@@ -61,10 +63,12 @@ public class TTS extends GodotPlugin implements TextToSpeech.OnInitListener {
         this.tts = new TextToSpeech(this.getActivity(), this);
     }
 
+    @Override
     public String getPluginName() {
         return "GodotTTS";
     }
 
+    @Override
     public List<String> getPluginMethods() {
         return Arrays.asList("speak", "stop", "get_rate", "set_rate", "has_screen_reader", "is_speaking");
     }
