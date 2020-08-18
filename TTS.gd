@@ -10,8 +10,8 @@ signal done
 func _init():
 	if OS.get_name() == "Server" or OS.has_feature("JavaScript"):
 		return
-	elif Engine.has_singleton("AndroidTTS"):
-		tts = Engine.get_singleton("AndroidTTS")
+	elif Engine.has_singleton("GodotTTS"):
+		tts = Engine.get_singleton("GodotTTS")
 	else:
 		TTS = preload("godot-tts.gdns")
 	if TTS and (TTS.can_instance() or Engine.editor_hint):

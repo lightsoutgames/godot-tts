@@ -1,14 +1,12 @@
 package games.lightsout.godot.tts;
 
 import java.util.Arrays;
-import java.util.HashMap;
 import java.util.List;
 
 import org.godotengine.godot.Godot;
 import org.godotengine.godot.plugin.GodotPlugin;
 
 import android.accessibilityservice.AccessibilityServiceInfo;
-import android.app.Activity;
 import android.content.Context;
 import android.speech.tts.TextToSpeech;
 import android.view.accessibility.AccessibilityManager;
@@ -18,15 +16,14 @@ public class TTS extends GodotPlugin implements TextToSpeech.OnInitListener {
 
     private float rate = 1f;
 
-    // private Integer utteranceId = 0;
+    private Integer utteranceId = 0;
 
     public void speak(String text, boolean interrupt) {
         int mode = TextToSpeech.QUEUE_ADD;
         if (interrupt)
             mode = TextToSpeech.QUEUE_FLUSH;
-        HashMap<String, String> params = new HashMap();
-        tts.speak(text, mode, params);
-        // this.utteranceId++;
+        tts.speak(text, mode, null, this.utteranceId.toString());
+        this.utteranceId++;
     }
 
     public void stop() {
