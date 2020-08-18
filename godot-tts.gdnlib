@@ -5,10 +5,9 @@ Windows.64="res://addons/godot-tts/target/debug/godot_tts.dll"
 UWP.64="res://addons/godot-tts/target/debug/godot_tts.dll"
 X11.64="res://addons/godot-tts/target/debug/libgodot_tts.so"
 OSX.64="res://addons/godot-tts/target/debug/libgodot_tts.dylib"
+IOS="res://addons/godot-tts/target/universal/debug/libgodot_tts.a"
 
 [dependencies]
-
-X11.64=[  ]
 
 [general]
 
