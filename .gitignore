@@ -5,4 +5,5 @@ bazel-bin
 bazel-godot-tts
 bazel-out
 bazel-testlogs
-*.aar
+build
+.gradle
