@@ -89,7 +89,7 @@ jobs:
           cp linux/release/*.so godot-tts/target/release
           cp windows/release/*.dll godot-tts/target/release
           cp macos/release/*.dylib godot-tts/target/release
-          cp android/outputs/aar/godot_tts.aar godot-tts/
+          cp android/outputs/aar/godot-tts.aar godot-tts/
           cp LICENSE godot-tts
           cp README.md godot-tts
           cp TTS.gd godot-tts.g* godot-tts

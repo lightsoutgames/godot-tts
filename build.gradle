@@ -31,7 +31,7 @@ android {
 
     libraryVariants.all { variant ->
         variant.outputs.all { output ->
-            output.outputFileName = "godot_tts.aar"
+            output.outputFileName = "godot-tts.aar"
         }
     }
 }
