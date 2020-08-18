@@ -2,35 +2,42 @@ name: Build
 
 on:
   push:
-    branches: [ master ]
+    branches: [master]
   pull_request:
-    branches: [ master ]
+    branches: [master]
 
 jobs:
-
   build_linux:
     name: Build Linux
     runs-on: ubuntu-latest
     steps:
-    - uses: actions/checkout@v2
-    - run: |
-        sudo apt-get update
-        sudo apt-get install -y libspeechd-dev
-        cargo build --release --verbose
+      - uses: actions/checkout@v2
+      - run: |
+          sudo apt-get update
+          sudo apt-get install -y libspeechd-dev
+          cargo build --release
 
   build_windows:
     name: Build Windows
     runs-on: windows-latest
     steps:
-    - uses: actions/checkout@v2
-    - run: |
-        choco install -y llvm
-        cargo build --release --verbose
+      - uses: actions/checkout@v2
+      - run: |
+          choco install -y llvm
+          cargo build --release
+
+  build_macos:
+    name: Build MacOS
+    runs-on: macos-latest
+    steps:
+      - uses: actions/checkout@v2
+      - run: |
+          cargo build --release
 
   build_android:
     name: Build Android
     runs-on: ubuntu-latest
     steps:
-    - uses: actions/checkout@v2
-    - run: |
-        ./gradlew assemble
+      - uses: actions/checkout@v2
+      - run: |
+          ./gradlew assemble

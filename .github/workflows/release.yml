@@ -3,78 +3,95 @@ name: Release
 on:
   push:
     tags:
-    - 'v*'
+      - "v*"
 
 jobs:
-
   build_linux:
     name: Build Linux
     runs-on: ubuntu-latest
     steps:
-    - uses: actions/checkout@v2
-    - run: |
-        sudo apt-get update
-        sudo apt-get install -y libspeechd-dev
-        cargo build --release --verbose
-        mv target linux
-    - uses: actions/upload-artifact@v1
-      with:
-        name: linux
-        path: linux
+      - uses: actions/checkout@v2
+      - run: |
+          sudo apt-get update
+          sudo apt-get install -y libspeechd-dev
+          cargo build --release --verbose
+          mv target linux
+      - uses: actions/upload-artifact@v1
+        with:
+          name: linux
+          path: linux
 
   build_windows:
     name: Build Windows
     runs-on: windows-latest
     steps:
-    - uses: actions/checkout@v2
-    - run: |
-        choco install -y llvm
-        cargo build --release --verbose
-        move target windows
-    - uses: actions/upload-artifact@v1
-      with:
-        name: windows
-        path: windows
+      - uses: actions/checkout@v2
+      - run: |
+          choco install -y llvm
+          cargo build --release --verbose
+          move target windows
+      - uses: actions/upload-artifact@v1
+        with:
+          name: windows
+          path: windows
+
+  build_macos:
+    name: Build MacOS
+    runs-on: macos-latest
+    steps:
+      - uses: actions/checkout@v2
+      - run: |
+          cargo build --release
+          mv target macos
+      - uses: actions/upload-artifact@v1
+        with:
+          name: macos
+          path: macos
 
   package:
     name: Package
     runs-on: ubuntu-latest
-    needs: [build_linux, build_windows]
+    needs: [build_linux, build_windows, build_macos]
     steps:
-    - uses: actions/checkout@v2
-    - uses: actions/download-artifact@v1
-      with:
-        name: linux
-    - uses: actions/download-artifact@v1
-      with:
-        name: windows
-    - run: |
-        mkdir godot-tts
-        cp godot-tts.gdnlib.release godot-tts/godot-tts.gdnlib
-        mkdir -p godot-tts/target/release
-        cp linux/release/*.so godot-tts/target/release
-        cp windows/release/*.dll godot-tts/target/release
-        cp LICENSE godot-tts
-        cp TTS.gd godot-tts.g* godot-tts
-        cp godot-tts.gdnlib.release godot-tts/godot-tts.gdnlib
-        rm godot-tts/*.release
-        cp -R android godot-tts
-        zip -r9 godot-tts godot-tts
-    - uses: actions/create-release@v1
-      id: create_release
-      env:
-        GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-      with:
-        tag_name: ${{ github.ref }}
-        release_name: Release ${{ github.ref }}
-        draft: false
-        prerelease: false
-    - uses: actions/upload-release-asset@v1
-      id: upload-release-asset 
-      env:
-        GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-      with:
-        upload_url: ${{ steps.create_release.outputs.upload_url }}
-        asset_path: ./godot-tts.zip
-        asset_name: godot-tts.zip
-        asset_content_type: application/zip
+      - uses: actions/checkout@v2
+      - uses: actions/download-artifact@v1
+        with:
+          name: linux
+      - uses: actions/download-artifact@v1
+        with:
+          name: windows
+      - uses: actions/download-artifact@v1
+        with:
+          name: macos
+      - run: |
+          mkdir godot-tts
+          cp godot-tts.gdnlib.release godot-tts/godot-tts.gdnlib
+          mkdir -p godot-tts/target/release
+          cp linux/release/*.so godot-tts/target/release
+          cp windows/release/*.dll godot-tts/target/release
+          cp macos/release/*.dylib godot-tts/target/release
+          cp LICENSE godot-tts
+          cp README.md godot-tts
+          cp TTS.gd godot-tts.g* godot-tts
+          cp godot-tts.gdnlib.release godot-tts/godot-tts.gdnlib
+          rm godot-tts/*.release
+          cp -R android godot-tts
+          zip -r9 godot-tts godot-tts
+      - uses: actions/create-release@v1
+        id: create_release
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        with:
+          tag_name: ${{ github.ref }}
+          release_name: Release ${{ github.ref }}
+          draft: false
+          prerelease: false
+      - uses: actions/upload-release-asset@v1
+        id: upload-release-asset
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        with:
+          upload_url: ${{ steps.create_release.outputs.upload_url }}
+          asset_path: ./godot-tts.zip
+          asset_name: godot-tts.zip
+          asset_content_type: application/zip

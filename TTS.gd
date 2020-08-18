@@ -7,9 +7,7 @@ var tts
 
 signal done
 
-
-func _ready():
-	pause_mode = Node.PAUSE_MODE_PROCESS
+func _init():
 	if OS.get_name() == "Server" or OS.has_feature("JavaScript"):
 		return
 	elif Engine.has_singleton("AndroidTTS"):
@@ -21,6 +19,10 @@ func _ready():
 	else:
 		print_debug("TTS not available!")
 
+
+
+func _ready():
+	pause_mode = Node.PAUSE_MODE_PROCESS
 
 func _get_min_rate():
 	if OS.has_feature('JavaScript'):
@@ -217,10 +219,8 @@ var _was_speaking = false
 
 func _process(delta):
 	if self.is_speaking:
-		print("xxx Speaking")
 		_was_speaking = true
 	elif _was_speaking:
-		print("xxx Done")
 		emit_signal("done")
 		_was_speaking = false
 
