@@ -27,7 +27,7 @@ func _ready():
 func _get_min_rate():
 	if OS.has_feature('JavaScript'):
 		return 0.1
-	elif Engine.has_singleton("AndroidTTS"):
+	elif Engine.has_singleton("GodotTTS"):
 		return 0.1
 	elif tts != null:
 		return tts.min_rate
@@ -41,7 +41,7 @@ var min_rate setget , _get_min_rate
 func _get_max_rate():
 	if OS.has_feature('JavaScript'):
 		return 10
-	elif Engine.has_singleton("AndroidTTS"):
+	elif Engine.has_singleton("GodotTTS"):
 		return 10.0
 	elif tts != null:
 		return tts.max_rate
@@ -55,7 +55,7 @@ var max_rate setget , _get_max_rate
 func _get_normal_rate():
 	if OS.has_feature('JavaScript'):
 		return 1
-	elif Engine.has_singleton("AndroidTTS"):
+	elif Engine.has_singleton("GodotTTS"):
 		return 1.0
 	elif tts != null:
 		return tts.normal_rate
@@ -73,7 +73,7 @@ func _set_rate(rate):
 		rate = self.min_rate
 	elif rate > self.max_rate:
 		rate = self.max_rate
-	if Engine.has_singleton("AndroidTTS"):
+	if Engine.has_singleton("GodotTTS"):
 		return tts.set_rate(rate)
 	elif tts != null:
 		tts.rate = rate
@@ -82,7 +82,7 @@ func _set_rate(rate):
 
 
 func _get_rate():
-	if Engine.has_singleton("AndroidTTS"):
+	if Engine.has_singleton("GodotTTS"):
 		return tts.get_rate()
 	elif tts != null:
 		return tts.rate
@@ -142,7 +142,7 @@ func stop():
 
 
 func get_is_rate_supported():
-	if Engine.has_singleton("AndroidTTS"):
+	if Engine.has_singleton("GodotTTS"):
 		return true
 	elif OS.has_feature('JavaScript'):
 		return true
@@ -156,7 +156,7 @@ var is_rate_supported setget , get_is_rate_supported
 
 
 func _get_can_detect_is_speaking():
-	if Engine.has_singleton("AndroidTTS"):
+	if Engine.has_singleton("GodotTTS"):
 		return true
 	elif OS.has_feature('JavaScript'):
 		return true
@@ -169,7 +169,7 @@ var can_detect_is_speaking setget , _get_can_detect_is_speaking
 
 
 func _get_is_speaking():
-	if Engine.has_singleton("AndroidTTS"):
+	if Engine.has_singleton("GodotTTS"):
 		return tts.is_speaking()
 	elif OS.has_feature('JavaScript'):
 		return JavaScript.eval("window.speechSynthesis.speaking")
@@ -182,7 +182,7 @@ var is_speaking setget , _get_is_speaking
 
 
 func _get_can_detect_screen_reader():
-	if Engine.has_singleton("AndroidTTS"):
+	if Engine.has_singleton("GodotTTS"):
 		return true
 	elif OS.has_feature('JavaScript'):
 		return false
@@ -195,7 +195,7 @@ var can_detect_screen_reader setget , _get_can_detect_screen_reader
 
 
 func _get_has_screen_reader():
-	if Engine.has_singleton("AndroidTTS"):
+	if Engine.has_singleton("GodotTTS"):
 		return tts.has_screen_reader()
 	elif OS.has_feature('JavaScript'):
 		return false
