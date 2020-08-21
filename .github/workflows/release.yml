@@ -63,8 +63,8 @@ jobs:
           name: android
           path: android
 
-  build_macos:
-    name: Build MacOS
+  build_ios:
+    name: Build iOS
     runs-on: macos-latest
     steps:
       - uses: actions/checkout@v2
