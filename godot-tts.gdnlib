@@ -9,6 +9,8 @@ IOS="res://addons/godot-tts/target/universal/debug/libgodot_tts.a"
 
 [dependencies]
 
+Windows.64=["res://addons/godot-tts/target/debug/nvdaControllerClient64.dll", "res://addons/godot-tts/target/debug/SAAPI64.dll"]
+
 [general]
 
 singleton=false
