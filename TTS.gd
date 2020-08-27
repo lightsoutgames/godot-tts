@@ -65,7 +65,7 @@ func _get_normal_rate():
 
 var normal_rate setget , _get_normal_rate
 
-var javascript_rate = 1.0
+var javascript_rate = self.normal_rate
 
 
 func _set_rate(rate):
