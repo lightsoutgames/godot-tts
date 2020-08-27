@@ -40,7 +40,7 @@ var min_rate setget , _get_min_rate
 
 func _get_max_rate():
 	if OS.has_feature('JavaScript'):
-		return 10
+		return 10.0
 	elif Engine.has_singleton("GodotTTS"):
 		return 10.0
 	elif tts != null:
@@ -54,7 +54,7 @@ var max_rate setget , _get_max_rate
 
 func _get_normal_rate():
 	if OS.has_feature('JavaScript'):
-		return 1
+		return 1.0
 	elif Engine.has_singleton("GodotTTS"):
 		return 1.0
 	elif tts != null:
@@ -65,7 +65,7 @@ func _get_normal_rate():
 
 var normal_rate setget , _get_normal_rate
 
-var javascript_rate = 50
+var javascript_rate = 1.0
 
 
 func _set_rate(rate):
