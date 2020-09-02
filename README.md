@@ -7,11 +7,13 @@ This addon was primarily developed for the [Godot Accessibility addon](https://g
 Text-to-speech is complicated, and some features may not work everywhere. Most optional features have an associated boolean property used to determine if the feature is available. Further, while I do attempt to ensure that this addon works as well as possible on all platforms, there may be bugs, and pull requests are welcome. Known supported platforms include:
 
 * Windows
-  * Screen readers via [Tolk](https://github.com/dkager/tolk/)
-  * Native WinRT
+  * Screen readers/SAPI via Tolk
+  * WinRT
 * Linux via [Speech Dispatcher](https://freebsoft.org/speechd)
-* HTML 5
-* Android
+* MacOS
+  * AppKit on MacOS 10.13 and below
+  * AVFoundation on MacOS 10.14 and above, and iOS
+* Web
 
 ## Features
 
@@ -30,6 +32,23 @@ The public-facing API is contained entirely within [TTS.GD](https://github.com/l
 ## Download
 
 Download the [latest release](https://github.com/lightsoutgames/godot-tts/releases).
+
+## Notes on Android
+
+Usage on Android is a bit more complicated:
+
+* Set up a [custom Android build](https://docs.godotengine.org/en/latest/getting_started/workflow/export/android_custom_build.html).
+* Create a directory reachable at _res://android/plugins_ and place the _godot-tts.aar_ and _.godot-tts.gdap_ files from a release into that directory.
+* Update _res://android/build/build.gradle_ to specify a `minSdkVersion` of at least 21:
+
+```
+    defaultConfig {
+        minSdkVersion 21
+        targetSdkVersion 29 
+        versionCode pluginVersionCode
+        versionName pluginVersionName
+    }
+```
 
 ## Notes on Universal Windows Platform
 
