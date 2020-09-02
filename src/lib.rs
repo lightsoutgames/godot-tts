@@ -1,5 +1,4 @@
-use gdnative::init::*;
-use gdnative::*;
+use gdnative::prelude::*;
 use tts::{Features, TTS as Tts};
 
 #[derive(NativeClass)]
@@ -9,7 +8,7 @@ struct TTS(Tts);
 
 #[methods]
 impl TTS {
-    fn _init(_owner: gdnative::Node) -> Self {
+    fn new(_owner: &Node) -> Self {
         let tts = Tts::default().unwrap();
         Self(tts)
     }
@@ -122,18 +121,18 @@ impl TTS {
     }
 
     #[export]
-    fn speak(&mut self, _owner: Node, message: GodotString, interrupt: bool) {
+    fn speak(&mut self, _owner: &Node, message: GodotString, interrupt: bool) {
         let message = message.to_string();
         self.0.speak(message, interrupt).unwrap();
     }
 
     #[export]
-    fn stop(&mut self, _owner: Node) {
+    fn stop(&mut self, _owner: &Node) {
         self.0.stop().unwrap();
     }
 
     #[export]
-    fn is_rate_supported(&mut self, _owner: Node) -> bool {
+    fn is_rate_supported(&mut self, _owner: &Node) -> bool {
         let Features {
             rate: rate_supported,
             ..
@@ -142,7 +141,7 @@ impl TTS {
     }
 }
 
-fn init(handle: gdnative::init::InitHandle) {
+fn init(handle: InitHandle) {
     env_logger::init();
     handle.add_class::<TTS>();
 }
