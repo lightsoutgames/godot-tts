@@ -1,19 +1,36 @@
+use std::sync::mpsc::{channel, Receiver};
+
 use gdnative::prelude::*;
-use tts::{Features, TTS as Tts};
+use tts::{Features, UtteranceId, TTS as Tts};
+
+enum Msg {
+    UtteranceBegin(UtteranceId),
+    UtteranceEnd(UtteranceId),
+}
 
 #[derive(NativeClass)]
 #[inherit(Node)]
-#[register_with(Self::register_properties)]
-struct TTS(Tts);
+#[register_with(Self::register)]
+struct TTS(Tts, Receiver<Msg>);
 
 #[methods]
 impl TTS {
     fn new(_owner: &Node) -> Self {
         let tts = Tts::default().unwrap();
-        Self(tts)
+        let (tx, rx) = channel();
+        let tx_end = tx.clone();
+        tts.on_utterance_begin(Some(Box::new(move |utterance| {
+            tx.send(Msg::UtteranceBegin(utterance)).unwrap();
+        })))
+        .expect("Failed to set utterance_begin callback");
+        tts.on_utterance_end(Some(Box::new(move |utterance| {
+            tx_end.send(Msg::UtteranceEnd(utterance)).unwrap();
+        })))
+        .expect("Failed to set utterance_end callback");
+        Self(tts, rx)
     }
 
-    fn register_properties(builder: &ClassBuilder<Self>) {
+    fn register(builder: &ClassBuilder<Self>) {
         builder
             .add_property("rate")
             .with_getter(|this: &TTS, _| match this.0.get_rate() {
@@ -118,6 +135,14 @@ impl TTS {
                 }
             })
             .done();
+        builder.add_signal(Signal {
+            name: "utterance_begin",
+            args: &[],
+        });
+        builder.add_signal(Signal {
+            name: "utterance_end",
+            args: &[],
+        });
     }
 
     #[export]
@@ -138,6 +163,20 @@ impl TTS {
             ..
         } = self.0.supported_features();
         rate_supported
+    }
+
+    #[export]
+    fn _process(&mut self, owner: &Node, _delta: f32) {
+        if let Some(msg) = self.1.try_recv().ok() {
+            match msg {
+                Msg::UtteranceBegin(_utterance) => {
+                    owner.emit_signal("utterance_begin", &[]);
+                }
+                Msg::UtteranceEnd(_utterance) => {
+                    owner.emit_signal("utterance_end", &[]);
+                }
+            }
+        }
     }
 }
 

@@ -9,8 +9,8 @@ crate-type = ["staticlib", "cdylib"]
 
 [dependencies]
 env_logger = "0.7"
-gdnative = "0.9.0-preview.0"
-tts = ">= 0.6.4"
+gdnative = "0.9"
+tts = "0.8"
 
 [target.'cfg(windows)'.dependencies]
 tolk = ">= 0.2.1"
