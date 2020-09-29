@@ -166,6 +166,15 @@ impl TTS {
     }
 
     #[export]
+    fn are_utterance_callbacks_supported(&mut self, _owner: &Node) -> bool {
+        let Features {
+            utterance_callbacks: supported,
+            ..
+        } = self.0.supported_features();
+        supported
+    }
+
+    #[export]
     fn _process(&mut self, owner: &Node, _delta: f32) {
         if let Some(msg) = self.1.try_recv().ok() {
             match msg {

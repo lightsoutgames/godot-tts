@@ -7,6 +7,7 @@ var tts
 
 signal done
 
+
 func _init():
 	if OS.get_name() == "Server" or OS.has_feature("JavaScript"):
 		return
@@ -20,9 +21,9 @@ func _init():
 		print_debug("TTS not available!")
 
 
-
 func _ready():
 	pause_mode = Node.PAUSE_MODE_PROCESS
+
 
 func _get_min_rate():
 	if OS.has_feature('JavaScript'):
@@ -153,6 +154,20 @@ func get_is_rate_supported():
 
 
 var is_rate_supported setget , get_is_rate_supported
+
+
+func _get_are_utterance_callbacks_supported():
+	if Engine.has_singleton("GodotTTS"):
+		return false
+	elif OS.has_feature('JavaScript'):
+		return false
+	elif tts != null:
+		return tts.are_utterance_callbacks_supported()
+	else:
+		return false
+
+
+var are_utterance_callbacks_supported setget , _get_are_utterance_callbacks_supported
 
 
 func _get_can_detect_is_speaking():
