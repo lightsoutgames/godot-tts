@@ -142,7 +142,7 @@ func stop():
 		JavaScript.eval("window.speechSynthesis.cancel()")
 
 
-func get_is_rate_supported():
+func _get_is_rate_supported():
 	if Engine.has_singleton("GodotTTS"):
 		return true
 	elif OS.has_feature('JavaScript'):
@@ -153,7 +153,7 @@ func get_is_rate_supported():
 		return false
 
 
-var is_rate_supported setget , get_is_rate_supported
+var is_rate_supported setget , _get_is_rate_supported
 
 
 func _get_are_utterance_callbacks_supported():
