@@ -1,11 +1,13 @@
 tool
 extends Node
 
+signal utterance_begin
+
+signal utterance_end
+
 var TTS
 
 var tts
-
-signal done
 
 
 func _init():
@@ -17,6 +19,10 @@ func _init():
 		TTS = preload("godot-tts.gdns")
 	if TTS and (TTS.can_instance() or Engine.editor_hint):
 		tts = TTS.new()
+		self.add_child(tts)
+		if self.are_utterance_callbacks_supported:
+			tts.connect("utterance_begin", self, "_on_utterance_begin")
+			tts.connect("utterance_end", self, "_on_utterance_end")
 	else:
 		print_debug("TTS not available!")
 
@@ -229,15 +235,12 @@ func singular_or_plural(count, singular, plural):
 		return plural
 
 
-var _was_speaking = false
+func _on_utterance_begin():
+	emit_signal("utterance_begin")
 
 
-func _process(delta):
-	if self.is_speaking:
-		_was_speaking = true
-	elif _was_speaking:
-		emit_signal("done")
-		_was_speaking = false
+func _on_utterance_end():
+	emit_signal("utterance_end")
 
 
 func _exit_tree():

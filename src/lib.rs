@@ -15,18 +15,25 @@ struct TTS(Tts, Receiver<Msg>);
 
 #[methods]
 impl TTS {
-    fn new(_owner: &Node) -> Self {
+    fn new(owner: &Node) -> Self {
+        owner.set_pause_mode(2);
         let tts = Tts::default().unwrap();
         let (tx, rx) = channel();
-        let tx_end = tx.clone();
-        tts.on_utterance_begin(Some(Box::new(move |utterance| {
-            tx.send(Msg::UtteranceBegin(utterance)).unwrap();
-        })))
-        .expect("Failed to set utterance_begin callback");
-        tts.on_utterance_end(Some(Box::new(move |utterance| {
-            tx_end.send(Msg::UtteranceEnd(utterance)).unwrap();
-        })))
-        .expect("Failed to set utterance_end callback");
+        let Features {
+            utterance_callbacks,
+            ..
+        } = tts.supported_features();
+        if utterance_callbacks {
+            let tx_end = tx.clone();
+            tts.on_utterance_begin(Some(Box::new(move |utterance| {
+                tx.send(Msg::UtteranceBegin(utterance)).unwrap();
+            })))
+            .expect("Failed to set utterance_begin callback");
+            tts.on_utterance_end(Some(Box::new(move |utterance| {
+                tx_end.send(Msg::UtteranceEnd(utterance)).unwrap();
+            })))
+            .expect("Failed to set utterance_end callback");
+        }
         Self(tts, rx)
     }
 
