@@ -1,9 +1,9 @@
 tool
 extends Node
 
-signal utterance_begin
+signal utterance_begin(utterance)
 
-signal utterance_end
+signal utterance_end(utterance)
 
 var TTS
 
@@ -235,12 +235,14 @@ func singular_or_plural(count, singular, plural):
 		return plural
 
 
-func _on_utterance_begin():
-	emit_signal("utterance_begin")
+func _on_utterance_begin(utterance):
+	print("Here")
+	print(utterance)
+	emit_signal("utterance_begin", utterance)
 
 
-func _on_utterance_end():
-	emit_signal("utterance_end")
+func _on_utterance_end(utterance):
+	emit_signal("utterance_end", utterance)
 
 
 func _exit_tree():

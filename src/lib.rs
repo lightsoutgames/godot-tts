@@ -3,6 +3,17 @@ use std::sync::mpsc::{channel, Receiver};
 use gdnative::prelude::*;
 use tts::{Features, UtteranceId, TTS as Tts};
 
+#[derive(NativeClass)]
+#[inherit(Reference)]
+struct Utterance(pub(crate) Option<UtteranceId>);
+
+#[methods]
+impl Utterance {
+    fn new(_owner: &Reference) -> Self {
+        Self(None)
+    }
+}
+
 enum Msg {
     UtteranceBegin(UtteranceId),
     UtteranceEnd(UtteranceId),
@@ -144,11 +155,21 @@ impl TTS {
             .done();
         builder.add_signal(Signal {
             name: "utterance_begin",
-            args: &[],
+            args: &[SignalArgument {
+                name: "utterance",
+                default: Variant::default(),
+                export_info: ExportInfo::new(VariantType::Object),
+                usage: PropertyUsage::DEFAULT,
+            }],
         });
         builder.add_signal(Signal {
             name: "utterance_end",
-            args: &[],
+            args: &[SignalArgument {
+                name: "utterance",
+                default: Variant::default(),
+                export_info: ExportInfo::new(VariantType::Object),
+                usage: PropertyUsage::DEFAULT,
+            }],
         });
     }
 
@@ -185,11 +206,19 @@ impl TTS {
     fn _process(&mut self, owner: &Node, _delta: f32) {
         if let Some(msg) = self.1.try_recv().ok() {
             match msg {
-                Msg::UtteranceBegin(_utterance) => {
-                    owner.emit_signal("utterance_begin", &[]);
+                Msg::UtteranceBegin(utterance_id) => {
+                    let utterance: Instance<Utterance, Unique> = Instance::new();
+                    /*utterance
+                    .map_mut(|u, _| u.0 = Some(utterance_id))
+                    .expect("Failed to set utterance ID");*/
+                    owner.emit_signal("utterance_begin", &[utterance.owned_to_variant()]);
                 }
-                Msg::UtteranceEnd(_utterance) => {
-                    owner.emit_signal("utterance_end", &[]);
+                Msg::UtteranceEnd(utterance_id) => {
+                    let utterance: Instance<Utterance, Unique> = Instance::new();
+                    /*utterance
+                    .map_mut(|u, _| u.0 = Some(utterance_id))
+                    .expect("Failed to set utterance ID");*/
+                    owner.emit_signal("utterance_end", &[utterance.owned_to_variant()]);
                 }
             }
         }
