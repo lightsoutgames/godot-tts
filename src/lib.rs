@@ -178,9 +178,11 @@ impl TTS {
         let message = message.to_string();
         if let Ok(id) = self.0.speak(message, interrupt) {
             let utterance: Instance<Utterance, Unique> = Instance::new();
-            utterance
-                .map_mut(|u, _| u.0 = id)
-                .expect("Failed to set utterance ID");
+            if id.is_some() {
+                utterance
+                    .map_mut(|u, _| u.0 = id)
+                    .expect("Failed to set utterance ID");
+            }
             Some(utterance.owned_to_variant())
         } else {
             None
