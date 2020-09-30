@@ -174,9 +174,17 @@ impl TTS {
     }
 
     #[export]
-    fn speak(&mut self, _owner: &Node, message: GodotString, interrupt: bool) {
+    fn speak(&mut self, _owner: &Node, message: GodotString, interrupt: bool) -> Option<Variant> {
         let message = message.to_string();
-        self.0.speak(message, interrupt).unwrap();
+        if let Ok(id) = self.0.speak(message, interrupt) {
+            let utterance: Instance<Utterance, Unique> = Instance::new();
+            utterance
+                .map_mut(|u, _| u.0 = id)
+                .expect("Failed to set utterance ID");
+            Some(utterance.owned_to_variant())
+        } else {
+            None
+        }
     }
 
     #[export]
@@ -208,16 +216,16 @@ impl TTS {
             match msg {
                 Msg::UtteranceBegin(utterance_id) => {
                     let utterance: Instance<Utterance, Unique> = Instance::new();
-                    /*utterance
-                    .map_mut(|u, _| u.0 = Some(utterance_id))
-                    .expect("Failed to set utterance ID");*/
+                    utterance
+                        .map_mut(|u, _| u.0 = Some(utterance_id))
+                        .expect("Failed to set utterance ID");
                     owner.emit_signal("utterance_begin", &[utterance.owned_to_variant()]);
                 }
                 Msg::UtteranceEnd(utterance_id) => {
                     let utterance: Instance<Utterance, Unique> = Instance::new();
-                    /*utterance
-                    .map_mut(|u, _| u.0 = Some(utterance_id))
-                    .expect("Failed to set utterance ID");*/
+                    utterance
+                        .map_mut(|u, _| u.0 = Some(utterance_id))
+                        .expect("Failed to set utterance ID");
                     owner.emit_signal("utterance_end", &[utterance.owned_to_variant()]);
                 }
             }
@@ -227,6 +235,7 @@ impl TTS {
 
 fn init(handle: InitHandle) {
     env_logger::init();
+    handle.add_class::<Utterance>();
     handle.add_class::<TTS>();
 }
 

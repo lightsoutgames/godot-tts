@@ -121,8 +121,9 @@ var normal_rate_percentage setget , _get_rate_percentage
 
 
 func speak(text, interrupt := true):
+	var utterance
 	if tts != null:
-		tts.speak(text, interrupt)
+		utterance = tts.speak(text, interrupt)
 	elif OS.has_feature('JavaScript'):
 		var code = (
 			"""
@@ -139,6 +140,7 @@ func speak(text, interrupt := true):
 		JavaScript.eval(code)
 	else:
 		print_debug("%s: %s" % [text, interrupt])
+	return utterance
 
 
 func stop():
@@ -236,8 +238,6 @@ func singular_or_plural(count, singular, plural):
 
 
 func _on_utterance_begin(utterance):
-	print("Here")
-	print(utterance)
 	emit_signal("utterance_begin", utterance)
 
 
