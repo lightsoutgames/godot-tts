@@ -166,7 +166,7 @@ var is_rate_supported setget , _get_is_rate_supported
 
 func _get_are_utterance_callbacks_supported():
 	if Engine.has_singleton("GodotTTS"):
-		return false
+		return true
 	elif OS.has_feature('JavaScript'):
 		return false
 	elif tts != null:
