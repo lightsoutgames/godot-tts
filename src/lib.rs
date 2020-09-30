@@ -174,7 +174,7 @@ impl TTS {
     }
 
     #[export]
-    fn speak(&mut self, _owner: &Node, message: GodotString, interrupt: bool) -> Option<Variant> {
+    fn speak(&mut self, _owner: &Node, message: GodotString, interrupt: bool) -> Variant {
         let message = message.to_string();
         if let Ok(id) = self.0.speak(message, interrupt) {
             let utterance: Instance<Utterance, Unique> = Instance::new();
@@ -183,9 +183,10 @@ impl TTS {
                     .map_mut(|u, _| u.0 = id)
                     .expect("Failed to set utterance ID");
             }
-            Some(utterance.owned_to_variant())
+            let utterance = utterance.owned_to_variant();
+            utterance
         } else {
-            None
+            Variant::default()
         }
     }
 
