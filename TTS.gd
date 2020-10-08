@@ -5,6 +5,8 @@ signal utterance_begin(utterance)
 
 signal utterance_end(utterance)
 
+signal utterance_stop(utterance)
+
 var TTS
 
 var tts
@@ -23,6 +25,7 @@ func _init():
 		if self.are_utterance_callbacks_supported:
 			tts.connect("utterance_begin", self, "_on_utterance_begin")
 			tts.connect("utterance_end", self, "_on_utterance_end")
+			tts.connect("utterance_stop", self, "_on_utterance_stop")
 	else:
 		print_debug("TTS not available!")
 
@@ -243,6 +246,10 @@ func _on_utterance_begin(utterance):
 
 func _on_utterance_end(utterance):
 	emit_signal("utterance_end", utterance)
+
+
+func _on_utterance_stop(utterance):
+	emit_signal("utterance_stop", utterance)
 
 
 func _exit_tree():

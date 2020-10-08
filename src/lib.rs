@@ -17,6 +17,7 @@ impl Utterance {
 enum Msg {
     UtteranceBegin(UtteranceId),
     UtteranceEnd(UtteranceId),
+    UtteranceStop(UtteranceId),
 }
 
 #[derive(NativeClass)]
@@ -36,6 +37,7 @@ impl TTS {
         } = tts.supported_features();
         if utterance_callbacks {
             let tx_end = tx.clone();
+            let tx_stop = tx.clone();
             tts.on_utterance_begin(Some(Box::new(move |utterance| {
                 tx.send(Msg::UtteranceBegin(utterance)).unwrap();
             })))
@@ -44,6 +46,10 @@ impl TTS {
                 tx_end.send(Msg::UtteranceEnd(utterance)).unwrap();
             })))
             .expect("Failed to set utterance_end callback");
+            tts.on_utterance_stop(Some(Box::new(move |utterance| {
+                tx_stop.send(Msg::UtteranceStop(utterance)).unwrap();
+            })))
+            .expect("Failed to set utterance_stop callback");
         }
         Self(tts, rx)
     }
@@ -171,6 +177,15 @@ impl TTS {
                 usage: PropertyUsage::DEFAULT,
             }],
         });
+        builder.add_signal(Signal {
+            name: "utterance_stop",
+            args: &[SignalArgument {
+                name: "utterance",
+                default: Variant::default(),
+                export_info: ExportInfo::new(VariantType::Object),
+                usage: PropertyUsage::DEFAULT,
+            }],
+        });
     }
 
     #[export]
@@ -230,6 +245,13 @@ impl TTS {
                         .map_mut(|u, _| u.0 = Some(utterance_id))
                         .expect("Failed to set utterance ID");
                     owner.emit_signal("utterance_end", &[utterance.owned_to_variant()]);
+                }
+                Msg::UtteranceStop(utterance_id) => {
+                    let utterance: Instance<Utterance, Unique> = Instance::new();
+                    utterance
+                        .map_mut(|u, _| u.0 = Some(utterance_id))
+                        .expect("Failed to set utterance ID");
+                    owner.emit_signal("utterance_stop", &[utterance.owned_to_variant()]);
                 }
             }
         }
