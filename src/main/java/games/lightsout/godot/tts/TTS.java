@@ -67,6 +67,11 @@ public class TTS extends GodotPlugin implements TextToSpeech.OnInitListener {
             TTS.this.emitSignal("utterance_begin", id);
         }
 
+        public void onStop(String utteranceId, Boolean interrupted) {
+            Integer id = Integer.parseInt(utteranceId);
+            TTS.this.emitSignal("utterance_stop", id);
+        }
+
         public void onDone(String utteranceId) {
             Integer id = Integer.parseInt(utteranceId);
             TTS.this.emitSignal("utterance_end", id);
@@ -98,7 +103,8 @@ public class TTS extends GodotPlugin implements TextToSpeech.OnInitListener {
     public Set<SignalInfo> getPluginSignals() {
         SignalInfo begin = new SignalInfo("utterance_begin", Integer.class);
         SignalInfo end = new SignalInfo("utterance_end", Integer.class);
-        return new HashSet(Arrays.asList(begin, end));
+        SignalInfo stop = new SignalInfo("utterance_stop", Integer.class);
+        return new HashSet(Arrays.asList(begin, end, stop));
     }
 
     public void onInit(int status) {
