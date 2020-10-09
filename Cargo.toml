@@ -7,10 +7,14 @@ edition = "2018"
 [lib]
 crate-type = ["staticlib", "cdylib"]
 
+[features]
+
+use_tolk = ["tolk", "tts/use_tolk"]
+
 [dependencies]
 env_logger = "0.7"
 gdnative = "0.9"
-tts = "0.9"
+tts = "0.10"
 
 [target.'cfg(windows)'.dependencies]
-tolk = ">= 0.2.1"
+tolk = { version = ">= 0.2.1", optional = true }

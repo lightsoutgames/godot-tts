@@ -7,7 +7,7 @@ This addon was primarily developed for the [Godot Accessibility addon](https://g
 Text-to-speech is complicated, and some features may not work everywhere. Most optional features have an associated boolean property used to determine if the feature is available. Further, while I do attempt to ensure that this addon works as well as possible on all platforms, there may be bugs, and pull requests are welcome. Known supported platforms include:
 
 * Windows
-  * Screen readers/SAPI via Tolk
+  * Screen readers/SAPI via Tolk (requires `use_tolk` Cargo feature)
   * WinRT
 * Linux via [Speech Dispatcher](https://freebsoft.org/speechd)
 * MacOS
