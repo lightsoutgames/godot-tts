@@ -16,7 +16,7 @@ jobs:
           sudo apt-get update
           sudo apt-get install -y libspeechd-dev
           rustup update
-          cargo build --release
+          cargo check --release
 
   build_windows:
     name: Build Windows
@@ -26,7 +26,7 @@ jobs:
       - run: |
           choco install -y llvm
           rustup update
-          cargo build --release
+          cargo check --release --all-features
 
   build_macos:
     name: Build MacOS
@@ -35,7 +35,7 @@ jobs:
       - uses: actions/checkout@v2
       - run: |
           rustup update
-          cargo build --release
+          cargo check --release
 
   build_ios:
     name: Build iOS
