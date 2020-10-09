@@ -30,12 +30,28 @@ jobs:
       - run: |
           choco install -y llvm
           rustup update
-          cargo build --release
+          cargo build --all-features --release
           move target windows
       - uses: actions/upload-artifact@v1
         with:
           name: windows
           path: windows
+
+  build_uwp:
+    name: Build UWP
+    runs-on: windows-latest
+    steps:
+      - uses: actions/checkout@v2
+      - run: |
+          choco install -y llvm
+          rustup update
+          cargo build --release
+          move target uwp
+          move uwp\release\godot_tts.dll uwp\release\godot_tts.uwp.dll
+      - uses: actions/upload-artifact@v1
+        with:
+          name: uwp
+          path: uwp
 
   build_macos:
     name: Build MacOS
@@ -85,7 +101,15 @@ jobs:
   package:
     name: Package
     runs-on: ubuntu-latest
-    needs: [build_linux, build_windows, build_macos, build_android, build_ios]
+    needs:
+      [
+        build_linux,
+        build_windows,
+        build_uwp,
+        build_macos,
+        build_android,
+        build_ios,
+      ]
     steps:
       - uses: actions/checkout@v2
       - uses: actions/download-artifact@v1
@@ -96,6 +120,9 @@ jobs:
           name: windows
       - uses: actions/download-artifact@v1
         with:
+          name: uwp
+      - uses: actions/download-artifact@v1
+        with:
           name: macos
       - uses: actions/download-artifact@v1
         with:
@@ -104,19 +131,16 @@ jobs:
         with:
           name: ios
       - run: |
-          mkdir godot-tts
-          cp godot-tts.gdnlib.release godot-tts/godot-tts.gdnlib
-          cp godot-tts.gdap godot-tts/
           mkdir -p godot-tts/target/release
           cp linux/release/*.so godot-tts/target/release
           cp windows/release/*.dll godot-tts/target/release
+          cp uwp/release/godot_tts.uwp.dll godot-tts/target/release
           cp macos/release/*.dylib godot-tts/target/release
           cp android/outputs/aar/godot-tts.aar godot-tts/
           cp ios/universal/release/*.a godot-tts/target/release
           cp LICENSE godot-tts
           cp README.md godot-tts
           cp TTS.gd godot-tts.g* godot-tts
-          cp godot-tts.gdnlib.release godot-tts/godot-tts.gdnlib
           rm godot-tts/*.release
           zip -r9 godot-tts godot-tts
       - uses: actions/create-release@v1
