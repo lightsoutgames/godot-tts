@@ -141,6 +141,8 @@ jobs:
           cp LICENSE godot-tts
           cp README.md godot-tts
           cp TTS.gd godot-tts.g* godot-tts
+          rm godot-tts/*.gdnlib
+          mv godot-tts/godot-tts.gdnlib.release godot-tts/godot-tts.gdnlib
           rm godot-tts/*.release
           zip -r9 godot-tts godot-tts
       - uses: actions/create-release@v1
