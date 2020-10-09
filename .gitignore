@@ -7,3 +7,6 @@ bazel-out
 bazel-testlogs
 build
 .gradle
+.classpath
+.project
+.settings
