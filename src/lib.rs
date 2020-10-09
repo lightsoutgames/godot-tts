@@ -266,7 +266,7 @@ impl TTS {
 
 fn init(handle: InitHandle) {
     env_logger::init();
-    handle.add_class::<Utterance>();
+    handle.add_tool_class::<Utterance>();
     handle.add_class::<TTS>();
 }
 
