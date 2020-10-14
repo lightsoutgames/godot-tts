@@ -39,15 +39,20 @@ Usage on Android is a bit more complicated:
 
 * Set up a [custom Android build](https://docs.godotengine.org/en/latest/getting_started/workflow/export/android_custom_build.html).
 * Create a directory reachable at _res://android/plugins_ and place the _godot-tts.aar_ and _.godot-tts.gdap_ files from a release into that directory.
-* Update _res://android/build/build.gradle_ to specify a `minSdkVersion` of at least 21:
+* Update _res://android/build/config.gradle_ to specify a `minSdk` of at least 21. Individual versions may vary, but `minSdk` is the critical value from this example:
 
 ```
-    defaultConfig {
-        minSdkVersion 21
-        targetSdkVersion 29 
-        versionCode pluginVersionCode
-        versionName pluginVersionName
-    }
+ext.versions = [
+    androidGradlePlugin: '3.5.3',
+    compileSdk         : 29,
+    minSdk             : 21,
+    targetSdk          : 29,
+    buildTools         : '29.0.3',
+    supportCoreUtils   : '1.0.0',
+    kotlinVersion      : '1.3.61',
+    v4Support          : '1.0.0'
+
+]
 ```
 
 ## Notes on Universal Windows Platform
