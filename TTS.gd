@@ -21,7 +21,9 @@ func _init():
 		TTS = preload("godot-tts.gdns")
 	if TTS and (TTS.can_instance() or Engine.editor_hint):
 		tts = TTS.new()
-		self.add_child(tts)
+	if tts:
+		if not tts is JNISingleton:
+			self.add_child(tts)
 		if self.are_utterance_callbacks_supported:
 			tts.connect("utterance_begin", self, "_on_utterance_begin")
 			tts.connect("utterance_end", self, "_on_utterance_end")
