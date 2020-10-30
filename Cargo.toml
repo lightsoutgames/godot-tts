@@ -12,7 +12,7 @@ crate-type = ["staticlib", "cdylib"]
 use_tolk = ["tolk", "tts/use_tolk"]
 
 [dependencies]
-env_logger = "0.7"
+env_logger = "0.8"
 gdnative = "0.9"
 tts = ">= 0.10.1"
 
