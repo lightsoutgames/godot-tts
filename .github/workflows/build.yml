@@ -21,6 +21,8 @@ jobs:
   build_windows:
     name: Build Windows
     runs-on: windows-latest
+    env:
+      LIBCLANG_PATH: c:\llvm\bin
     steps:
       - uses: actions/checkout@v2
       - run: |
