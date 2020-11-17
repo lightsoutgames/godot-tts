@@ -82,6 +82,11 @@ jobs:
       - uses: actions/checkout@v2
         with:
           lfs: true
+      - uses: actions/cache@v2
+        with:
+          path: ~/.gradle/caches
+          key: ${{ runner.os }}-gradle-${{ hashFiles('**/*.gradle') }}
+          restore-keys: ${{ runner.os }}-gradle
       - run: |
           ./gradlew assemble
           mv build android
