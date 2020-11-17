@@ -22,11 +22,11 @@ jobs:
     name: Build Windows
     runs-on: windows-latest
     env:
-      LIBCLANG_PATH: c:\llvm\bin
+      LIBCLANG_PATH: c:\program files\llvm\bin
     steps:
       - uses: actions/checkout@v2
       - run: |
-          choco install -y llvm
+          choco install -qy llvm
           rustup update
           cargo check --release --all-features
 
