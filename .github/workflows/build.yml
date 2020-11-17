@@ -12,6 +12,7 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v2
+      - uses: Swatinem/rust-cache@v1
       - run: |
           sudo apt-get update
           sudo apt-get install -y libspeechd-dev
@@ -25,6 +26,7 @@ jobs:
       LIBCLANG_PATH: c:\program files\llvm\bin
     steps:
       - uses: actions/checkout@v2
+      - uses: Swatinem/rust-cache@v1
       - run: |
           choco install -qy llvm
           rustup update
@@ -35,6 +37,7 @@ jobs:
     runs-on: macos-latest
     steps:
       - uses: actions/checkout@v2
+      - uses: Swatinem/rust-cache@v1
       - run: |
           rustup update
           cargo check --release
@@ -44,6 +47,7 @@ jobs:
     runs-on: macos-latest
     steps:
       - uses: actions/checkout@v2
+      - uses: Swatinem/rust-cache@v1
       - run: |
           rustup update
           rustup target add aarch64-apple-ios x86_64-apple-ios
