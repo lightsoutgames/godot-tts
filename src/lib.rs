@@ -14,6 +14,7 @@ impl Utterance {
     }
 }
 
+#[allow(clippy::enum_variant_names)]
 enum Msg {
     UtteranceBegin(UtteranceId),
     UtteranceEnd(UtteranceId),
@@ -121,13 +122,7 @@ impl TTS {
             .done();
         builder
             .add_property("can_detect_screen_reader")
-            .with_getter(|_: &TTS, _| {
-                if cfg!(all(windows, features = "use_tolk")) {
-                    true
-                } else {
-                    false
-                }
-            })
+            .with_getter(|_: &TTS, _| cfg!(all(windows, features = "use_tolk")))
             .done();
         #[allow(unreachable_code)]
         builder
@@ -148,7 +143,7 @@ impl TTS {
                     is_speaking: is_speaking_supported,
                     ..
                 } = this.0.supported_features();
-                return is_speaking_supported;
+                is_speaking_supported
             })
             .done();
         builder
@@ -159,9 +154,9 @@ impl TTS {
                     ..
                 } = this.0.supported_features();
                 if is_speaking_supported {
-                    return this.0.is_speaking().unwrap();
+                    this.0.is_speaking().unwrap()
                 } else {
-                    return false;
+                    false
                 }
             })
             .done();
@@ -204,8 +199,7 @@ impl TTS {
                     .map_mut(|u, _| u.0 = id)
                     .expect("Failed to set utterance ID");
             }
-            let utterance = utterance.owned_to_variant();
-            utterance
+            utterance.owned_to_variant()
         } else {
             Variant::default()
         }
@@ -236,7 +230,7 @@ impl TTS {
 
     #[export]
     fn _process(&mut self, owner: &Node, _delta: f32) {
-        if let Some(msg) = self.1.try_recv().ok() {
+        if let Ok(msg) = self.1.try_recv() {
             match msg {
                 Msg::UtteranceBegin(utterance_id) => {
                     let utterance: Instance<Utterance, Unique> = Instance::new();
