@@ -18,7 +18,7 @@ jobs:
         if: ${{ runner.os == 'Linux' }}
       - run: |
           choco install -qy llvm
-          echo "LIBCLANG_PATH=c:\program files\llvm\bin" >> $GITHUB_ENV
+          echo LIBCLANG_PATH=`"c:\program` files\llvm\bin`" >> $GITHUB_ENV
         if: ${{ runner.os == 'Windows' }}
       - uses: actions-rs/toolchain@v1
         with:
