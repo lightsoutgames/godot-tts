@@ -2,57 +2,42 @@ name: Build
 
 on:
   push:
-    branches: [master]
   pull_request:
-    branches: [master]
 
 jobs:
-  build_linux:
-    name: Build Linux
-    runs-on: ubuntu-latest
+  check:
+    name: Check
+    strategy:
+      matrix:
+        os: [windows-latest, ubuntu-latest, macos-latest]
+    runs-on: ${{ matrix.os }}
     steps:
       - uses: actions/checkout@v2
       - uses: Swatinem/rust-cache@v1
-      - run: |
-          sudo apt-get update
-          sudo apt-get install -y libspeechd-dev
-          rustup update
-          cargo check --release
-
-  build_windows:
-    name: Build Windows
-    runs-on: windows-latest
-    env:
-      LIBCLANG_PATH: c:\program files\llvm\bin
-    steps:
-      - uses: actions/checkout@v2
-      - uses: Swatinem/rust-cache@v1
+      - run: sudo apt-get update; sudo apt-get install -y libspeechd-dev
+        if: ${{ runner.os == 'Linux' }}
       - run: |
           choco install -qy llvm
-          rustup update
-          cargo check --release --all-features
-
-  build_macos:
-    name: Build MacOS
-    runs-on: macos-latest
-    steps:
-      - uses: actions/checkout@v2
-      - uses: Swatinem/rust-cache@v1
-      - run: |
-          rustup update
-          cargo check --release
-
-  build_ios:
-    name: Build iOS
-    runs-on: macos-latest
-    steps:
-      - uses: actions/checkout@v2
-      - uses: Swatinem/rust-cache@v1
-      - run: |
-          rustup update
-          rustup target add aarch64-apple-ios x86_64-apple-ios
-          cargo install cargo-lipo
-          cargo lipo --release
+          echo "LIBCLANG_PATH=c:\program files\llvm\bin" >> $GITHUB_ENV
+        if: ${{ runner.os == 'Windows' }}
+      - uses: actions-rs/toolchain@v1
+        with:
+          profile: minimal
+          toolchain: stable
+          components: rustfmt, clippy
+          override: true
+      - uses: actions-rs/cargo@v1
+        with:
+          command: check
+          args: --all-features --examples
+      - uses: actions-rs/cargo@v1
+        with:
+          command: fmt
+          args: --all -- --check
+      - uses: actions-rs/clippy-check@v1
+        with:
+          token: ${{ secrets.GITHUB_TOKEN }}
+          args: --all-features
 
   build_android:
     name: Build Android
