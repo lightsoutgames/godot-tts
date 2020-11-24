@@ -30,7 +30,7 @@ struct TTS(Tts, Receiver<Msg>);
 impl TTS {
     fn new(owner: &Node) -> Self {
         owner.set_pause_mode(2);
-        let tts = Tts::default().unwrap();
+        let tts = Tts::default().expect("Failed to initialize TTS");
         let (tx, rx) = channel();
         let Features {
             utterance_callbacks,
@@ -40,15 +40,20 @@ impl TTS {
             let tx_end = tx.clone();
             let tx_stop = tx.clone();
             tts.on_utterance_begin(Some(Box::new(move |utterance| {
-                tx.send(Msg::UtteranceBegin(utterance)).unwrap();
+                tx.send(Msg::UtteranceBegin(utterance))
+                    .expect("Failed to send UtteranceBegin");
             })))
             .expect("Failed to set utterance_begin callback");
             tts.on_utterance_end(Some(Box::new(move |utterance| {
-                tx_end.send(Msg::UtteranceEnd(utterance)).unwrap();
+                tx_end
+                    .send(Msg::UtteranceEnd(utterance))
+                    .expect("Failed to send UtteranceEnd");
             })))
             .expect("Failed to set utterance_end callback");
             tts.on_utterance_stop(Some(Box::new(move |utterance| {
-                tx_stop.send(Msg::UtteranceStop(utterance)).unwrap();
+                tx_stop
+                    .send(Msg::UtteranceStop(utterance))
+                    .expect("Failed to send UtteranceStop");
             })))
             .expect("Failed to set utterance_stop callback");
         }
@@ -74,7 +79,7 @@ impl TTS {
                     } else if v > this.0.max_rate() {
                         v = this.0.max_rate();
                     }
-                    this.0.set_rate(v).unwrap();
+                    this.0.set_rate(v).expect("Failed to set rate");
                 }
             })
             .done();
@@ -154,7 +159,9 @@ impl TTS {
                     ..
                 } = this.0.supported_features();
                 if is_speaking_supported {
-                    this.0.is_speaking().unwrap()
+                    this.0
+                        .is_speaking()
+                        .expect("Failed to determine if speaking")
                 } else {
                     false
                 }
@@ -207,7 +214,7 @@ impl TTS {
 
     #[export]
     fn stop(&mut self, _owner: &Node) {
-        self.0.stop().unwrap();
+        self.0.stop().expect("Failed to stop");
     }
 
     #[export]
