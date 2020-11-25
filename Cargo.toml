@@ -14,7 +14,7 @@ use_tolk = ["tolk", "tts/use_tolk"]
 [dependencies]
 env_logger = "0.8"
 gdnative = "0.9"
-tts = ">= 0.11.4"
+tts = ">= 0.11.5"
 
 [target.'cfg(windows)'.dependencies]
 tolk = { version = "0.3", optional = true }
