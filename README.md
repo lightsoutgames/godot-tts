@@ -33,6 +33,10 @@ The public-facing API is contained entirely within [TTS.GD](https://github.com/l
 
 Download the [latest release](https://github.com/lightsoutgames/godot-tts/releases).
 
+## Usage
+
+Inside your projects root folder create a new folder named _addons_. Then extract _godot-tts.zip_ into that folder. After attaching TTS.GD to a node you can make calls to the API.
+
 ## Notes on Android
 
 Usage on Android is a bit more complicated:
