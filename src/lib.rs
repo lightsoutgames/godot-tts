@@ -127,13 +127,13 @@ impl TTS {
             .done();
         builder
             .add_property("can_detect_screen_reader")
-            .with_getter(|_: &TTS, _| cfg!(all(windows, features = "use_tolk")))
+            .with_getter(|_: &TTS, _| cfg!(all(windows, features = "tolk")))
             .done();
         #[allow(unreachable_code)]
         builder
             .add_property("has_screen_reader")
             .with_getter(|_: &TTS, _| {
-                #[cfg(all(windows, features = "use_tolk"))]
+                #[cfg(all(windows, features = "tolk"))]
                 {
                     let tolk = tolk::Tolk::new();
                     return tolk.detect_screen_reader().is_some();
