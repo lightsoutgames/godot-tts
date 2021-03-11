@@ -10,7 +10,7 @@ crate-type = ["staticlib", "cdylib"]
 [dependencies]
 env_logger = "0.8"
 gdnative = "0.9"
-tts = "0.14"
+tts = "0.15"
 
 [target.'cfg(windows)'.dependencies]
 tolk = { version = "0.3", optional = true }
