@@ -36,6 +36,71 @@ func _ready():
 	pause_mode = Node.PAUSE_MODE_PROCESS
 
 
+func _get_min_volume():
+	if OS.has_feature('JavaScript'):
+		return 0
+	else:
+		return 0
+
+var min_volume setget , _get_min_volume
+
+
+func _get_max_volume():
+	if OS.has_feature('JavaScript'):
+		return 1.0
+	else:
+		return 0
+
+var max_volume setget , _get_max_volume
+
+
+func _get_normal_volume():
+	if OS.has_feature('JavaScript'):
+		return 1.0
+	else:
+		return 0
+
+var normal_volume setget , _get_normal_volume
+
+var javascript_volume = self.normal_volume
+
+
+func _set_volume(volume):
+	if volume < self.min_volume:
+		volume = self.min_volume
+	elif volume > self.max_volume:
+		volume = self.max_volume
+	if OS.has_feature('JavaScript'):
+		javascript_volume = volume
+
+
+func _get_volume():
+	if OS.has_feature('JavaScript'):
+		return javascript_volume
+	else:
+		return 0
+
+
+var volume setget _set_volume, _get_volume
+
+
+func _get_volume_percentage():
+	return range_lerp(self.volume, self.min_volume, self.max_volume, 0, 100)
+
+
+func _set_volume_percentage(v):
+	self.rate = range_lerp(v, 0, 100, self.min_volume, self.max_volume)
+
+
+var volume_percentage setget _set_volume_percentage, _get_volume_percentage
+
+
+func _get_normal_volume_percentage():
+	return range_lerp(self.normal_volume, self.min_volume, self.max_volume, 0, 100)
+
+var normal_volume_percentage setget , _get_normal_volume_percentage
+
+
 func _get_min_rate():
 	if OS.has_feature('JavaScript'):
 		return 0.1
@@ -132,15 +197,16 @@ func speak(text, interrupt := true):
 	elif OS.has_feature('JavaScript'):
 		var code = (
 			"""
-            let utterance = new SpeechSynthesisUtterance("%s")
-            utterance.rate = %s
-        """
-			% [text.replace("\n", " "), javascript_rate]
+			let utterance = new SpeechSynthesisUtterance("%s")
+			utterance.rate = %s
+			utterance.volume = %s
+		"""
+			% [text.replace("\n", " "), javascript_rate, javascript_volume]
 		)
 		if interrupt:
 			code += """
-                window.speechSynthesis.cancel()
-            """
+				window.speechSynthesis.cancel()
+			"""
 		code += "window.speechSynthesis.speak(utterance)"
 		JavaScript.eval(code)
 	else:
