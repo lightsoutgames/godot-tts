@@ -18,6 +18,7 @@ import android.view.accessibility.AccessibilityManager;
 public class TTS extends GodotPlugin implements TextToSpeech.OnInitListener {
     private TextToSpeech tts = null;
 
+    private float volume = 1f;
     private float rate = 1f;
 
     private Integer utteranceId = 0;
@@ -34,6 +35,15 @@ public class TTS extends GodotPlugin implements TextToSpeech.OnInitListener {
 
     public void stop() {
         tts.stop();
+    }
+
+    public float get_volume() {
+        return this.volume;
+    }
+
+    public void set_volume(float volume) {
+        this.volume = volume;
+        tts.Engine.KEY_PARAM_VOLUME = volume;
     }
 
     public float get_rate() {
