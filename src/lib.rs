@@ -62,6 +62,70 @@ impl TTS {
 
     fn register(builder: &ClassBuilder<Self>) {
         builder
+            .add_property("volume")
+            .with_getter(|this: &TTS, _| match this.0.get_volume() {
+                Ok(volume) => volume,
+                _ => 0.,
+            })
+            .with_setter(|this: &mut TTS, _, v: f32| {
+                let Features {
+                    volume: volume_supported,
+                    ..
+                } = this.0.supported_features();
+                if volume_supported {
+                    let mut v = v;
+                    if v < this.0.min_volume() {
+                        v = this.0.min_volume();
+                    } else if v > this.0.max_volume() {
+                        v = this.0.max_volume();
+                    }
+                    this.0.set_volume(v).expect("Failed to set volume");
+                }
+            })
+            .done();
+        builder
+            .add_property("min_volume")
+            .with_getter(|this: &TTS, _| {
+                let Features {
+                    volume: volume_supported,
+                    ..
+                } = this.0.supported_features();
+                if volume_supported {
+                    this.0.min_volume()
+                } else {
+                    0.
+                }
+            })
+            .done();
+        builder
+            .add_property("max_volume")
+            .with_getter(|this: &TTS, _| {
+                let Features {
+                    volume: volume_supported,
+                    ..
+                } = this.0.supported_features();
+                if volume_supported {
+                    this.0.max_volume()
+                } else {
+                    0.
+                }
+            })
+            .done();
+        builder
+            .add_property("normal_volume")
+            .with_getter(|this: &TTS, _| {
+                let Features {
+                    volume: volume_supported,
+                    ..
+                } = this.0.supported_features();
+                if volume_supported {
+                    this.0.normal_volume()
+                } else {
+                    0.
+                }
+            })
+            .done();
+        builder
             .add_property("rate")
             .with_getter(|this: &TTS, _| match this.0.get_rate() {
                 Ok(rate) => rate,
