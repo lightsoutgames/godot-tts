@@ -1,10 +1,9 @@
 use std::sync::mpsc::{channel, Receiver};
 
 use gdnative::prelude::*;
-use tts::{Features, UtteranceId, TTS as Tts};
+use tts::{Features, Tts, UtteranceId};
 
 #[derive(NativeClass)]
-#[inherit(Reference)]
 struct Utterance(pub(crate) Option<UtteranceId>);
 
 #[methods]
@@ -21,6 +20,7 @@ enum Msg {
     UtteranceStop(UtteranceId),
 }
 
+#[allow(clippy::upper_case_acronyms)]
 #[derive(NativeClass)]
 #[inherit(Node)]
 #[register_with(Self::register)]
@@ -62,7 +62,7 @@ impl TTS {
 
     fn register(builder: &ClassBuilder<Self>) {
         builder
-            .add_property("rate")
+            .property("rate")
             .with_getter(|this: &TTS, _| match this.0.get_rate() {
                 Ok(rate) => rate,
                 _ => 0.,
@@ -84,7 +84,7 @@ impl TTS {
             })
             .done();
         builder
-            .add_property("min_rate")
+            .property("min_rate")
             .with_getter(|this: &TTS, _| {
                 let Features {
                     rate: rate_supported,
@@ -98,7 +98,7 @@ impl TTS {
             })
             .done();
         builder
-            .add_property("max_rate")
+            .property("max_rate")
             .with_getter(|this: &TTS, _| {
                 let Features {
                     rate: rate_supported,
@@ -112,7 +112,7 @@ impl TTS {
             })
             .done();
         builder
-            .add_property("normal_rate")
+            .property("normal_rate")
             .with_getter(|this: &TTS, _| {
                 let Features {
                     rate: rate_supported,
@@ -126,12 +126,12 @@ impl TTS {
             })
             .done();
         builder
-            .add_property("can_detect_screen_reader")
+            .property("can_detect_screen_reader")
             .with_getter(|_: &TTS, _| cfg!(all(windows, features = "tolk")))
             .done();
         #[allow(unreachable_code)]
         builder
-            .add_property("has_screen_reader")
+            .property("has_screen_reader")
             .with_getter(|_: &TTS, _| {
                 #[cfg(all(windows, features = "tolk"))]
                 {
@@ -142,7 +142,7 @@ impl TTS {
             })
             .done();
         builder
-            .add_property("can_detect_is_speaking")
+            .property("can_detect_is_speaking")
             .with_getter(|this: &TTS, _| {
                 let Features {
                     is_speaking: is_speaking_supported,
@@ -152,7 +152,7 @@ impl TTS {
             })
             .done();
         builder
-            .add_property("is_speaking")
+            .property("is_speaking")
             .with_getter(|this: &TTS, _| {
                 let Features {
                     is_speaking: is_speaking_supported,
@@ -167,38 +167,37 @@ impl TTS {
                 }
             })
             .done();
-        builder.add_signal(Signal {
-            name: "utterance_begin",
-            args: &[SignalArgument {
-                name: "utterance",
+        builder
+            .signal("utterance_begin")
+            .with_param_custom(SignalParam {
+                name: "utterance".into(),
                 default: Variant::default(),
                 export_info: ExportInfo::new(VariantType::Object),
                 usage: PropertyUsage::DEFAULT,
-            }],
-        });
-        builder.add_signal(Signal {
-            name: "utterance_end",
-            args: &[SignalArgument {
-                name: "utterance",
+            })
+            .done();
+        builder
+            .signal("utterance_end")
+            .with_param_custom(SignalParam {
+                name: "utterance".into(),
                 default: Variant::default(),
                 export_info: ExportInfo::new(VariantType::Object),
                 usage: PropertyUsage::DEFAULT,
-            }],
-        });
-        builder.add_signal(Signal {
-            name: "utterance_stop",
-            args: &[SignalArgument {
-                name: "utterance",
+            })
+            .done();
+        builder
+            .signal("utterance_stop")
+            .with_param_custom(SignalParam {
+                name: "utterance".into(),
                 default: Variant::default(),
                 export_info: ExportInfo::new(VariantType::Object),
                 usage: PropertyUsage::DEFAULT,
-            }],
-        });
+            })
+            .done();
     }
 
-    #[export]
-    fn speak(&mut self, _owner: &Node, message: GodotString, interrupt: bool) -> Variant {
-        let message = message.to_string();
+    #[method]
+    fn speak(&mut self, message: String, interrupt: bool) -> Variant {
         if let Ok(id) = self.0.speak(message, interrupt) {
             let utterance: Instance<Utterance, Unique> = Instance::new();
             if id.is_some() {
@@ -212,13 +211,13 @@ impl TTS {
         }
     }
 
-    #[export]
-    fn stop(&mut self, _owner: &Node) {
+    #[method]
+    fn stop(&mut self) {
         self.0.stop().expect("Failed to stop");
     }
 
-    #[export]
-    fn is_rate_supported(&mut self, _owner: &Node) -> bool {
+    #[method]
+    fn is_rate_supported(&mut self) -> bool {
         let Features {
             rate: rate_supported,
             ..
@@ -226,8 +225,8 @@ impl TTS {
         rate_supported
     }
 
-    #[export]
-    fn are_utterance_callbacks_supported(&mut self, _owner: &Node) -> bool {
+    #[method]
+    fn are_utterance_callbacks_supported(&mut self) -> bool {
         let Features {
             utterance_callbacks: supported,
             ..
@@ -235,8 +234,8 @@ impl TTS {
         supported
     }
 
-    #[export]
-    fn _process(&mut self, owner: &Node, _delta: f32) {
+    #[method]
+    fn _process(&mut self, #[base] base: &Node, _delta: f32) {
         if let Ok(msg) = self.1.try_recv() {
             match msg {
                 Msg::UtteranceBegin(utterance_id) => {
@@ -244,21 +243,21 @@ impl TTS {
                     utterance
                         .map_mut(|u, _| u.0 = Some(utterance_id))
                         .expect("Failed to set utterance ID");
-                    owner.emit_signal("utterance_begin", &[utterance.owned_to_variant()]);
+                    base.emit_signal("utterance_begin", &[utterance.owned_to_variant()]);
                 }
                 Msg::UtteranceEnd(utterance_id) => {
                     let utterance: Instance<Utterance, Unique> = Instance::new();
                     utterance
                         .map_mut(|u, _| u.0 = Some(utterance_id))
                         .expect("Failed to set utterance ID");
-                    owner.emit_signal("utterance_end", &[utterance.owned_to_variant()]);
+                    base.emit_signal("utterance_end", &[utterance.owned_to_variant()]);
                 }
                 Msg::UtteranceStop(utterance_id) => {
                     let utterance: Instance<Utterance, Unique> = Instance::new();
                     utterance
                         .map_mut(|u, _| u.0 = Some(utterance_id))
                         .expect("Failed to set utterance ID");
-                    owner.emit_signal("utterance_stop", &[utterance.owned_to_variant()]);
+                    base.emit_signal("utterance_stop", &[utterance.owned_to_variant()]);
                 }
             }
         }
@@ -271,6 +270,4 @@ fn init(handle: InitHandle) {
     handle.add_class::<TTS>();
 }
 
-godot_gdnative_init!();
-godot_nativescript_init!(init);
-godot_gdnative_terminate!();
+godot_init!(init);
