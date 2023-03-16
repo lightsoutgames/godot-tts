@@ -2,8 +2,7 @@ name: Release
 
 on:
   push:
-    tags:
-      - "v*"
+  pull_request:
 
 jobs:
   build_linux:
@@ -22,8 +21,42 @@ jobs:
           name: linux
           path: linux
 
+  build_linux_32:
+    name: Build Linux (32 bits)
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v2
+      - uses: Swatinem/rust-cache@v1
+      - run: |
+          sudo dpkg --add-architecture i386
+          sudo apt-get update
+          sudo apt-get install -y libspeechd-dev-i386
+          cargo build --release --target i686-unknown-linux-gnu
+          mv target linux
+      - uses: actions/upload-artifact@v1
+        with:
+          name: linux
+          path: linux
+
   build_windows:
     name: Build Windows
+    runs-on: windows-latest
+    env:
+      LIBCLANG_PATH: c:\program files\llvm\bin
+    steps:
+      - uses: actions/checkout@v2
+      - uses: Swatinem/rust-cache@v1
+      - run: |
+          choco install -qy llvm
+          cargo build --release
+          move target windows
+      - uses: actions/upload-artifact@v1
+        with:
+          name: windows
+          path: windows
+
+  build_windows_32:
+    name: Build Windows (32 bits)
     runs-on: windows-latest
     env:
       LIBCLANG_PATH: c:\program files\llvm\bin
@@ -160,7 +193,7 @@ jobs:
         with:
           tag_name: ${{ github.ref }}
           release_name: Release ${{ github.ref }}
-          draft: false
+          draft: true
           prerelease: false
       - uses: actions/upload-release-asset@v1
         id: upload-release-asset
