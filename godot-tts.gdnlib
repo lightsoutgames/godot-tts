@@ -2,14 +2,17 @@
 
 Server.64="res://addons/godot-tts/target/debug/libgodot_tts.so"
 Windows.64="res://addons/godot-tts/target/debug/godot_tts.dll"
+Windows.32="res://addons/godot-tts/target/debug/32/godot_tts.dll"
 UWP.64="res://addons/godot-tts/target/debug/godot_tts.dll"
 X11.64="res://addons/godot-tts/target/debug/libgodot_tts.so"
+X11.32="res://addons/godot-tts/target/debug/32/libgodot_tts.so"
 OSX.64="res://addons/godot-tts/target/debug/libgodot_tts.dylib"
-IOS="res://addons/godot-tts/target/universal/debug/libgodot_tts.a"
+IOS="res://addons/godot-tts/target/debug/libgodot_tts.a"
 
 [dependencies]
 
-Windows.64=["res://addons/godot-tts/target/debug/nvdaControllerClient64.dll", "res://addons/godot-tts/target/debug/SAAPI64.dll"]
+Windows.64=[ "res://addons/godot-tts/target/debug/nvdaControllerClient64.dll", "res://addons/godot-tts/target/debug/SAAPI64.dll" ]
+Windows.32=[ "res://addons/godot-tts/target/debug/32/dolapi32.dll", "res://addons/godot-tts/target/debug/32/nvdaControllerClient32.dll", "res://addons/godot-tts/target/debug/32/SAAPI32.dll" ]
 
 [general]
 
