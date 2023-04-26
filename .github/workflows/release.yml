@@ -32,7 +32,7 @@ jobs:
       - uses: Swatinem/rust-cache@v1
       - run: |
           choco install -qy llvm
-          cargo build --features tolk --features tts/tolk --release
+          cargo build --release
           move target windows
       - uses: actions/upload-artifact@v1
         with:
