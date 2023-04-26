@@ -16,11 +16,31 @@ jobs:
           sudo apt-get update
           sudo apt-get install -y libspeechd-dev
           cargo build --release
-          mv target linux
+          mkdir linux
+          mv target/release/*.so linux
       - uses: actions/upload-artifact@v1
         with:
           name: linux
           path: linux
+
+  build_linux_32:
+    name: Build Linux (32 bits)
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v2
+      - uses: Swatinem/rust-cache@v1
+      - run: |
+          sudo dpkg --add-architecture i386
+          sudo apt-get update
+          sudo apt-get install -y libspeechd-dev:i386 gcc-multilib
+          rustup target add i686-unknown-linux-gnu
+          cargo build --release --target i686-unknown-linux-gnu
+          mkdir linux-32
+          mv target/i686-unknown-linux-gnu/release/*.so linux-32
+      - uses: actions/upload-artifact@v1
+        with:
+          name: linux-32
+          path: linux-32
 
   build_windows:
     name: Build Windows
@@ -33,11 +53,31 @@ jobs:
       - run: |
           choco install -qy llvm
           cargo build --release
-          move target windows
+          mkdir windows
+          move target\release\*.dll windows
       - uses: actions/upload-artifact@v1
         with:
           name: windows
           path: windows
+
+  build_windows_32:
+    name: Build Windows (32 bits)
+    runs-on: windows-latest
+    env:
+      LIBCLANG_PATH: c:\program files\llvm\bin
+    steps:
+      - uses: actions/checkout@v2
+      - uses: Swatinem/rust-cache@v1
+      - run: |
+          choco install -qy llvm
+          rustup target add i686-pc-windows-msvc
+          cargo build --release --target i686-pc-windows-msvc
+          mkdir windows-32
+          move target\i686-pc-windows-msvc\release\*.dll windows-32
+      - uses: actions/upload-artifact@v1
+        with:
+          name: windows-32
+          path: windows-32
 
   build_uwp:
     name: Build UWP
@@ -50,8 +90,8 @@ jobs:
       - run: |
           choco install -y llvm
           cargo build --release
-          move target uwp
-          move uwp\release\godot_tts.dll uwp\release\godot_tts.uwp.dll
+          mkdir uwp
+          move target\release\godot_tts.dll uwp\godot_tts.uwp.dll
       - uses: actions/upload-artifact@v1
         with:
           name: uwp
@@ -65,7 +105,8 @@ jobs:
       - uses: Swatinem/rust-cache@v1
       - run: |
           cargo build --release
-          mv target macos
+          mkdir macos
+          mv target/release/*.dylib macos
       - uses: actions/upload-artifact@v1
         with:
           name: macos
@@ -101,7 +142,8 @@ jobs:
           rustup target add aarch64-apple-ios x86_64-apple-ios
           cargo install cargo-lipo
           cargo lipo --release
-          mv target ios
+          mkdir ios
+          mv target/universal/release/*.a ios
       - uses: actions/upload-artifact@v1
         with:
           name: ios
@@ -113,7 +155,9 @@ jobs:
     needs:
       [
         build_linux,
+        build_linux_32,
         build_windows,
+        build_windows_32,
         build_uwp,
         build_macos,
         build_android,
@@ -126,7 +170,13 @@ jobs:
           name: linux
       - uses: actions/download-artifact@v1
         with:
+          name: linux-32
+      - uses: actions/download-artifact@v1
+        with:
           name: windows
+      - uses: actions/download-artifact@v1
+        with:
+          name: windows-32
       - uses: actions/download-artifact@v1
         with:
           name: uwp
@@ -140,13 +190,15 @@ jobs:
         with:
           name: ios
       - run: |
-          mkdir -p godot-tts/target/release
-          cp linux/release/*.so godot-tts/target/release
-          cp windows/release/*.dll godot-tts/target/release
-          cp uwp/release/godot_tts.uwp.dll godot-tts/target/release
-          cp macos/release/*.dylib godot-tts/target/release
+          mkdir -p godot-tts/target/release/32
+          cp linux/*.so godot-tts/target/release
+          cp linux-32/*.so godot-tts/target/release/32
+          cp windows/*.dll godot-tts/target/release
+          cp windows-32/*.dll godot-tts/target/release/32
+          cp uwp/*.dll godot-tts/target/release
+          cp macos/*.dylib godot-tts/target/release
           cp android/outputs/aar/godot-tts.aar godot-tts/
-          cp ios/universal/release/*.a godot-tts/target/release
+          cp ios/*.a godot-tts/target/release
           cp LICENSE godot-tts
           cp README.md godot-tts
           cp TTS.gd godot-tts.g* godot-tts
